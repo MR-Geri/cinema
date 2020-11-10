@@ -18,7 +18,9 @@ class MyWidget(QMainWindow):
         pass
 
     def load_base(self):
-        pass
+        path_base_file = QFileDialog.getOpenFileName(
+            self, 'Выбрать базу', '',
+            'SQLite (*.sqlite);;Все файлы (*)')[0]
 
 
 if __name__ == '__main__':
