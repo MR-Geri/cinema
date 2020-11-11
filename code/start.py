@@ -22,7 +22,6 @@ class MyWidget(QMainWindow):
         self.path_base_file = QFileDialog.getOpenFileName(
             self, 'Выбрать базу', '',
             'SQLite (*.sqlite);;Все файлы (*)')[0]
-        print(self.path_base_file)
 
 
 if __name__ == '__main__':
