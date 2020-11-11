@@ -1,3 +1,4 @@
+import json
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import *
@@ -10,7 +11,9 @@ class Login(QMainWindow):
         self.button_sign_in.clicked.connect(self.sign_in)
 
     def sign_in(self):
-        pass
+        accounts = json.load(open('../accounts.json'))
+        if accounts[self.line_login.text()] == self.line_password.text():
+            print('Вход разрешён')
 
 
 class Form_login(QMainWindow):
