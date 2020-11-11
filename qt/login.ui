@@ -126,7 +126,7 @@
        </font>
       </property>
       <property name="text">
-       <string/>
+       <string>Введите логин и пароль</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

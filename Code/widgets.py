@@ -1,4 +1,3 @@
-import json
 from PyQt5 import uic
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog
@@ -17,8 +16,7 @@ class MyWidget(QMainWindow):
         self.button_load.clicked.connect(self.load_base)
 
     def create_base(self):
-        #
-        self.hide()
+        pass
 
     def load_base(self):
         self.path_base_file = QFileDialog.getOpenFileName(
