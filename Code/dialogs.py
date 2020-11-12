@@ -34,10 +34,7 @@ class Form_login(QDialog):
         self.button_admin.clicked.connect(self.admin)
 
     def cashier(self):
-        print(get_data_base(
-            self.path_base_file,
-            """SELECT title, cinema_id, rows, places_pow FROM Halls"""
-        ))
+        self.accept()
 
     def admin(self):
         dialog = Login()
