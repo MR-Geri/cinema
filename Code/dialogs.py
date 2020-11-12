@@ -26,18 +26,20 @@ class Login(QDialog):
 
 
 class Form_login(QDialog):
-    def __init__(self, path_base_file):
+    def __init__(self):
         super().__init__()
-        self.path_base_file = path_base_file
         uic.loadUi('../qt/form_login.ui', self)
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
+        self.user = None
 
     def cashier(self):
+        self.user = 'Кассир'
         self.accept()
 
     def admin(self):
         dialog = Login()
         if dialog.exec_() == QDialog.Accepted:
+            self.user = 'Администратор'
             self.accept()
         dialog.deleteLater()
