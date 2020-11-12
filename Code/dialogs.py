@@ -2,6 +2,8 @@ import json
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog
 
+from Code.data_base import get_data_base
+
 
 class Login(QDialog):
     def __init__(self):
@@ -24,14 +26,18 @@ class Login(QDialog):
 
 
 class Form_login(QDialog):
-    def __init__(self):
+    def __init__(self, path_base_file):
         super().__init__()
+        self.path_base_file = path_base_file
         uic.loadUi('../qt/form_login.ui', self)
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
 
     def cashier(self):
-        pass
+        print(get_data_base(
+            self.path_base_file,
+            """SELECT title, cinema_id, rows, places_pow FROM Halls"""
+        ))
 
     def admin(self):
         dialog = Login()

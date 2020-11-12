@@ -1,8 +1,9 @@
 from PyQt5 import uic
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QDialog
+from PyQt5.QtWidgets import *
 
 from Code.dialogs import Form_login
+from Code.data_base import get_data_base
 
 
 class MyWidget(QMainWindow):
@@ -23,7 +24,7 @@ class MyWidget(QMainWindow):
             self, 'Выбрать базу', '',
             'SQLite (*.sqlite);;Все файлы (*)')[0]
         if self.path_base_file:
-            dialog = Form_login()
+            dialog = Form_login(self.path_base_file)
             if dialog.exec_() == QDialog.Accepted:
                 self.hide()
             dialog.deleteLater()
