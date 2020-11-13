@@ -22,7 +22,6 @@ class WidgetCinemaCard(QWidget):
         #
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
-        self.button_browse.clicked.connect(self.browse)
         #
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
         self.gridLayout.addWidget(self.label_halls, 2, 0, 1, 0)
@@ -31,7 +30,6 @@ class WidgetCinemaCard(QWidget):
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
-            self.button_edit.clicked.connect(self.edit)
             self.gridLayout.addWidget(self.button_edit, 5, 0)
             self.gridLayout.addWidget(self.button_browse, 5, 1)
             #
@@ -39,11 +37,3 @@ class WidgetCinemaCard(QWidget):
             self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
-
-    def edit(self):
-        print(f'Изменение {self.id_}')
-
-    def browse(self):
-        print(f'Просмотр {self.id_}')
-
-
