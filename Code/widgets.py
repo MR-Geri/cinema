@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-class WidgetCard(QWidget):
+class WidgetCinemaCard(QWidget):
     def __init__(self, user, id_, title, quantity_halls, quantity_sessions, quantity_places):
         super().__init__()
         self.id_ = id_
@@ -34,6 +34,7 @@ class WidgetCard(QWidget):
             self.button_edit.clicked.connect(self.edit)
             self.gridLayout.addWidget(self.button_edit, 5, 0)
             self.gridLayout.addWidget(self.button_browse, 5, 1)
+            #
         else:
             self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
         #
