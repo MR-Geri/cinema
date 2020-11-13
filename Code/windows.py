@@ -8,24 +8,35 @@ from Code.data_base import get_data_base
 from Code.widgets import WidgetCard
 
 
-class WindowCinema(QMainWindow):
+class WindowCinemas(QWidget):
     def __init__(self, path_base_file, user='Пользователь'):
         super().__init__()
-        uic.loadUi('../qt/cinema.ui', self)
+        uic.loadUi('../qt/cinemas.ui', self)
         self.cards = None
         self.path_base_file = path_base_file
-        self.label_user.setText(user)
+        self.user = user
+        self.label_user.setText(self.user)
         self.update_()
 
     def update_(self):
         self.cards = QListWidget()
         for id_, title in get_data_base(self.path_base_file, """SELECT * FROM Cinemas"""):
-            num_halls = str(get_data_base(
+            quantity_halls = get_data_base(
                 self.path_base_file,
                 """SELECT COUNT(*) FROM Halls h WHERE h.cinema_id = ?""",
                 (id_,)
-            )[0][0])
-            card = WidgetCard(id_, title, num_halls, '0', '0')
+            )[0][0]
+            quantity_sessions = get_data_base(
+                self.path_base_file,
+                """SELECT COUNT(*) FROM Sessions s, Halls h WHERE h.cinema_id = ? AND s.hall_id = h.id""",
+                (id_,)
+            )[0][0]
+            quantity_places = sum([i[0] for i in get_data_base(
+                self.path_base_file,
+                """SELECT rows * places_pow FROM Halls h WHERE h.cinema_id = ?""",
+                (id_,)
+            )])
+            card = WidgetCard(self.user, id_, title, quantity_halls, quantity_sessions, quantity_places)
             q_list_card = QListWidgetItem(self.cards)
             q_list_card.setSizeHint(card.sizeHint())
             self.cards.addItem(q_list_card)
@@ -33,7 +44,7 @@ class WindowCinema(QMainWindow):
         self.grid.addWidget(self.cards, 1, 0, 2, 0)
 
 
-class WindowStart(QMainWindow):
+class WindowStart(QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi('../qt/start.ui', self)
@@ -54,7 +65,16 @@ class WindowStart(QMainWindow):
         if self.path_base_file:
             dialog = Form_login()
             if dialog.exec_() == QDialog.Accepted:
-                self.cinema = WindowCinema(self.path_base_file, dialog.user)
+                self.cinema = WindowCinemas(self.path_base_file, dialog.user)
+                self.cinema.button_exit.clicked.connect(self.show)
+                self.cinema.button_exit.clicked.connect(self.cinema.hide)
                 self.cinema.show()
                 self.hide()
             dialog.deleteLater()
+
+
+class Controller(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.start = WindowStart()
+        self.start.show()

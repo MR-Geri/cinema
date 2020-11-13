@@ -1,10 +1,9 @@
 import sys
-from PyQt5.QtWidgets import *
-from Code.windows import WindowStart
+from PyQt5.QtWidgets import QApplication
+from Code.windows import Controller
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = WindowStart()
-    ex.show()
+    controller = Controller()
     sys.exit(app.exec_())

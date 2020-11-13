@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Кинотеатры</string>
+   <string>Яндекс.Кино</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background: rgb(255, 186, 0);</string>
