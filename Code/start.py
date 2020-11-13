@@ -1,10 +1,10 @@
 import sys
 from PyQt5.QtWidgets import *
-from Code.widgets import WidgetStart
+from Code.windows import WindowStart
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = WidgetStart()
+    ex = WindowStart()
     ex.show()
     sys.exit(app.exec_())
