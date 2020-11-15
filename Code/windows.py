@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from Code.dialogs import Form_login
 from Code.data_base import get_data_base
-from Code.widgets import WidgetCinemaCard
+from Code.widgets import WidgetCinemaCard, WidgetHallCard
 
 
 class Window(QMainWindow):
@@ -20,7 +20,7 @@ class Window(QMainWindow):
         #
         menubar = self.menuBar()
         self.ActMenu = menubar.addMenu('&Действия')
-        self.bar()
+        self.gen_bar()
         action_exit = QAction('Выйти', self)
         action_exit.triggered.connect(self.close)
         action_exit.triggered.connect(self.start.show)
@@ -28,20 +28,37 @@ class Window(QMainWindow):
         #
         self.update_()
 
+    def gen_card(self, id_, title):
+        card = self.card(self.user, title, *self.card_data(id_))
+        card.button_browse.clicked.connect(lambda state, _id=id_: self.browse(_id))
+        if self.user == 'Администратор':
+            card.button_edit.clicked.connect(lambda state, _id=id_: self.edit(_id))
+        return card
+
     def update_(self):
         self.cards = QListWidget()
-        self._update()
+        for id_, title in self.base:
+            #
+            card = self.gen_card(id_, title)
+            #
+            q_list_card = QListWidgetItem(self.cards)
+            q_list_card.setSizeHint(card.sizeHint())
+            self.cards.addItem(q_list_card)
+            self.cards.setItemWidget(q_list_card, card)
         self.grid.addWidget(self.cards, 1, 0, 2, 0)
 
 
 class WindowCinema(Window):
     def __init__(self, cinemas=None, cinema_id=None):
         self.cinemas = cinemas
-        self.start = cinemas.start
         self.cinema_id = cinema_id
-        super().__init__('../qt/cinema.ui', self.start, self.cinemas.user)
+        self.base = get_data_base(cinemas.start.path_base_file,
+                                  """SELECT id, title FROM Halls WHERE  cinema_id = ?""",
+                                  (self.cinema_id, ))
+        self.card = WidgetHallCard
+        super().__init__('../qt/cinema.ui', cinemas.start, self.cinemas.user)
 
-    def bar(self):
+    def gen_bar(self):
         if self.user == 'Администратор':
             action_new_hall = QAction('Добавить зал', self)
             action_new_hall.setShortcut('Ctrl+N')
@@ -52,8 +69,19 @@ class WindowCinema(Window):
         action_cinemas.triggered.connect(self.cinemas.show)
         self.ActMenu.addAction(action_cinemas)
 
-    def _update(self):
-        pass
+    def card_data(self, id_):
+        sessions = [i[0] for i in get_data_base(
+            self.path_base_file,
+            """SELECT title FROM Sessions s WHERE s.hall_id = ?""",
+            (id_,)
+        )]
+        quantity_sessions = len(sessions)
+        quantity_places = get_data_base(
+            self.path_base_file,
+            """SELECT rows * places_pow FROM Halls h WHERE h.id = ?""",
+            (id_,)
+        )[0][0]
+        return quantity_sessions, quantity_places, sessions
 
     def new_hall(self):
         pass
@@ -62,48 +90,40 @@ class WindowCinema(Window):
 class WindowCinemas(Window):
     def __init__(self, start=None, user='Пользователь'):
         self.cinema = None
+        self.card = WidgetCinemaCard
+        self.base = get_data_base(start.path_base_file, """SELECT id, title FROM Cinemas""")
         super().__init__('../qt/cinemas.ui', start, user)
 
-    def bar(self):
+    def gen_bar(self):
         if self.user == 'Администратор':
             action_new_cinema = QAction('Добавить кинотеатр', self)
             action_new_cinema.setShortcut('Ctrl+N')
             action_new_cinema.triggered.connect(self.new_cinema)
             self.ActMenu.addAction(action_new_cinema)
 
-    def _update(self):
-        for id_, title in get_data_base(self.path_base_file, """SELECT * FROM Cinemas"""):
-            quantity_halls = get_data_base(
-                self.path_base_file,
-                """SELECT COUNT(*) FROM Halls h WHERE h.cinema_id = ?""",
-                (id_,)
-            )[0][0]
-            quantity_sessions = get_data_base(
-                self.path_base_file,
-                """SELECT COUNT(*) FROM Sessions s, Halls h WHERE h.cinema_id = ? AND s.hall_id = h.id""",
-                (id_,)
-            )[0][0]
-            quantity_places = sum([i[0] for i in get_data_base(
-                self.path_base_file,
-                """SELECT rows * places_pow FROM Halls h WHERE h.cinema_id = ?""",
-                (id_,)
-            )])
-            #
-            card = WidgetCinemaCard(self.user, id_, title, quantity_halls, quantity_sessions, quantity_places)
-            card.button_browse.clicked.connect(lambda state, _id=id_: self.browse(_id))
-            if self.user == 'Администратор':
-                card.button_edit.clicked.connect(lambda state, _id=id_: self.edit(_id))
-            #
-            q_list_card = QListWidgetItem(self.cards)
-            q_list_card.setSizeHint(card.sizeHint())
-            self.cards.addItem(q_list_card)
-            self.cards.setItemWidget(q_list_card, card)
+    def card_data(self, id_):
+        quantity_halls = get_data_base(
+            self.path_base_file,
+            """SELECT COUNT(*) FROM Halls h WHERE h.cinema_id = ?""",
+            (id_,)
+        )[0][0]
+        quantity_sessions = get_data_base(
+            self.path_base_file,
+            """SELECT COUNT(*) FROM Sessions s, Halls h WHERE h.cinema_id = ? AND s.hall_id = h.id""",
+            (id_,)
+        )[0][0]
+        quantity_places = sum([i[0] for i in get_data_base(
+            self.path_base_file,
+            """SELECT rows * places_pow FROM Halls h WHERE h.cinema_id = ?""",
+            (id_,)
+        )])
+        return quantity_halls, quantity_sessions, quantity_places
 
     def new_cinema(self):
-        self.update_()
+        pass
 
     def edit(self, id_):
-        print(f'Изменение {id_}')
+        pass
 
     def browse(self, id_):
         self.cinema = WindowCinema(self, id_)

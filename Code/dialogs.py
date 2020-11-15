@@ -2,8 +2,6 @@ import json
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog
 
-from Code.data_base import get_data_base
-
 
 class Login(QDialog):
     def __init__(self):
