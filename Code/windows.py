@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from Code.dialogs import Form_login
 from Code.data_base import get_data_base
-from Code.widgets import WidgetCinemaCard, WidgetHallCard
+from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard
 
 
 class Window(QMainWindow):
@@ -48,15 +48,27 @@ class Window(QMainWindow):
         self.grid.addWidget(self.cards, 1, 0, 2, 0)
 
 
+class WindowHall(Window):
+    def __init__(self, cinema=None, hall_id=None):
+        self.cinema = cinema
+        self.hall_id = hall_id
+        self.base = get_data_base(cinema.start.path_base_file,
+                                  """SELECT id, title FROM Halls WHERE  cinema_id = ?""",
+                                  (self.cinema_id,))
+        self.card = WidgetHallCard
+        super().__init__('../qt/hall.ui', self.cinema.start, self.cinema.user)
+
+
 class WindowCinema(Window):
     def __init__(self, cinemas=None, cinema_id=None):
+        self.hall = None
         self.cinemas = cinemas
         self.cinema_id = cinema_id
         self.base = get_data_base(cinemas.start.path_base_file,
                                   """SELECT id, title FROM Halls WHERE  cinema_id = ?""",
                                   (self.cinema_id, ))
-        self.card = WidgetHallCard
-        super().__init__('../qt/cinema.ui', cinemas.start, self.cinemas.user)
+        self.card = WidgetCinemaCard
+        super().__init__('../qt/cinema.ui', self.cinemas.start, self.cinemas.user)
 
     def gen_bar(self):
         if self.user == 'Администратор':
@@ -86,11 +98,19 @@ class WindowCinema(Window):
     def new_hall(self):
         pass
 
+    def edit(self, id_):
+        pass
+
+    def browse(self, id_):
+        self.hall = WindowHall(self, id_)
+        self.hall.show()
+        self.hide()
+
 
 class WindowCinemas(Window):
     def __init__(self, start=None, user='Пользователь'):
         self.cinema = None
-        self.card = WidgetCinemaCard
+        self.card = WidgetCinemasCard
         self.base = get_data_base(start.path_base_file, """SELECT id, title FROM Cinemas""")
         super().__init__('../qt/cinemas.ui', start, user)
 

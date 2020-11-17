@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-class WidgetCinemaCard(QWidget):
+class WidgetCinemasCard(QWidget):
     def __init__(self, user, title, quantity_halls, quantity_sessions, quantity_places):
         super().__init__()
         self.gridLayout = QGridLayout()
@@ -38,7 +38,7 @@ class WidgetCinemaCard(QWidget):
         self.setLayout(self.gridLayout)
 
 
-class WidgetHallCard(QWidget):
+class WidgetCinemaCard(QWidget):
     def __init__(self, user, title, quantity_sessions, quantity_places, sessions):
         super().__init__()
         self.gridLayout = QGridLayout()
@@ -81,5 +81,40 @@ class WidgetHallCard(QWidget):
             #
         else:
             self.gridLayout.addWidget(self.button_browse, 4, 0, 1, 0)
+        #
+        self.setLayout(self.gridLayout)
+
+
+class WidgetHallCard(QWidget):
+    def __init__(self, user, title):
+        super().__init__()
+        self.gridLayout = QGridLayout()
+        #
+        self.label_title = QLabel(title)
+        self.label_halls = QLabel(f'Всего залов: ')
+        self.label_sessions = QLabel(f'Всего сеансов: ')
+        self.label_places = QLabel(f'Всего мест: ')
+        #
+        self.label_title.setAlignment(Qt.AlignHCenter)
+        self.label_title.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_halls.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_sessions.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_places.setFont(QFont('MS Shell Dlg 2', 16))
+        #
+        self.button_browse = QPushButton('Просмотреть')
+        self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
+        #
+        self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_halls, 2, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_sessions, 3, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_places, 4, 0, 1, 0)
+        if user == 'Администратор':
+            self.button_edit = QPushButton('Изменить')
+            self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.gridLayout.addWidget(self.button_edit, 5, 0)
+            self.gridLayout.addWidget(self.button_browse, 5, 1)
+            #
+        else:
+            self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
