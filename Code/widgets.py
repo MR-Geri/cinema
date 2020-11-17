@@ -86,28 +86,28 @@ class WidgetCinemaCard(QWidget):
 
 
 class WidgetHallCard(QWidget):
-    def __init__(self, user, title):
+    def __init__(self, user, title, date, time, duration):
         super().__init__()
         self.gridLayout = QGridLayout()
         #
         self.label_title = QLabel(title)
-        self.label_halls = QLabel(f'Всего залов: ')
-        self.label_sessions = QLabel(f'Всего сеансов: ')
-        self.label_places = QLabel(f'Всего мест: ')
+        self.label_date = QLabel(f'Дата: {date}')
+        self.label_time = QLabel(f'Время: {time}')
+        self.label_duration = QLabel(f'Продолжительность: {duration}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
         self.label_title.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_halls.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_sessions.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_places.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_date.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_time.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_duration.setFont(QFont('MS Shell Dlg 2', 16))
         #
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
         #
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
-        self.gridLayout.addWidget(self.label_halls, 2, 0, 1, 0)
-        self.gridLayout.addWidget(self.label_sessions, 3, 0, 1, 0)
-        self.gridLayout.addWidget(self.label_places, 4, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_date, 2, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_time, 3, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_duration, 4, 0, 1, 0)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))

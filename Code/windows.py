@@ -52,11 +52,43 @@ class WindowHall(Window):
     def __init__(self, cinema=None, hall_id=None):
         self.cinema = cinema
         self.hall_id = hall_id
-        self.base = get_data_base(cinema.start.path_base_file,
-                                  """SELECT id, title FROM Halls WHERE  cinema_id = ?""",
-                                  (self.cinema_id,))
+        self.base = get_data_base(self.cinema.start.path_base_file,
+                                  """SELECT id, title FROM Sessions WHERE  hall_id = ?""",
+                                  (self.hall_id,))
         self.card = WidgetHallCard
         super().__init__('../qt/hall.ui', self.cinema.start, self.cinema.user)
+
+    def gen_bar(self):
+        if self.user == 'Администратор':
+            action_new_hall = QAction('Добавить сеанс', self)
+            action_new_hall.setShortcut('Ctrl+N')
+            action_new_hall.triggered.connect(self.new_hall)
+            self.ActMenu.addAction(action_new_hall)
+        action_cinema = QAction('Кинотеатр', self)
+        action_cinema.triggered.connect(self.close)
+        action_cinema.triggered.connect(self.cinema.show)
+        self.ActMenu.addAction(action_cinema)
+        action_cinemas = QAction('Кинотеатры', self)
+        action_cinemas.triggered.connect(self.close)
+        action_cinemas.triggered.connect(self.cinema.cinemas.show)
+        self.ActMenu.addAction(action_cinemas)
+
+    def card_data(self, id_):
+        date, time, duration = get_data_base(
+            self.cinema.start.path_base_file,
+            """SELECT date, time, duration FROM Sessions WHERE  hall_id = ?""",
+            (id_,)
+        )
+        return date, time, duration
+
+    def new_hall(self):
+        pass
+
+    def edit(self, id_):
+        pass
+
+    def browse(self, id_):
+        pass
 
 
 class WindowCinema(Window):
