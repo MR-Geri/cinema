@@ -9,9 +9,9 @@ from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard
 
 
 class Window(QMainWindow):
-    def __init__(self, path, start=None, user='Пользователь'):
+    def __init__(self, start=None, user='Пользователь'):
         super().__init__()
-        uic.loadUi(path, self)
+        uic.loadUi('../qt/window.ui', self)
         self.cards = None
         self.start = start
         self.path_base_file = start.path_base_file
@@ -56,7 +56,7 @@ class WindowHall(Window):
                                   """SELECT id, title FROM Sessions WHERE  hall_id = ?""",
                                   (self.hall_id,))
         self.card = WidgetHallCard
-        super().__init__('../qt/hall.ui', self.cinema.start, self.cinema.user)
+        super().__init__(self.cinema.start, self.cinema.user)
 
     def gen_bar(self):
         if self.user == 'Администратор':
@@ -100,7 +100,7 @@ class WindowCinema(Window):
                                   """SELECT id, title FROM Halls WHERE  cinema_id = ?""",
                                   (self.cinema_id, ))
         self.card = WidgetCinemaCard
-        super().__init__('../qt/cinema.ui', self.cinemas.start, self.cinemas.user)
+        super().__init__(self.cinemas.start, self.cinemas.user)
 
     def gen_bar(self):
         if self.user == 'Администратор':
@@ -144,7 +144,7 @@ class WindowCinemas(Window):
         self.cinema = None
         self.card = WidgetCinemasCard
         self.base = get_data_base(start.path_base_file, """SELECT id, title FROM Cinemas""")
-        super().__init__('../qt/cinemas.ui', start, user)
+        super().__init__(start, user)
 
     def gen_bar(self):
         if self.user == 'Администратор':

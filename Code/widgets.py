@@ -48,6 +48,7 @@ class WidgetCinemaCard(QWidget):
         self.label_places = QLabel(f'Количество мест: {quantity_places}')
         #
         self.sessions = QListWidget()
+        self.sessions.setMaximumHeight(160)
         self.sessions.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         for title_session in sessions:
             #
