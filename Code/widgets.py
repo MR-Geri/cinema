@@ -119,3 +119,32 @@ class WidgetHallCard(QWidget):
             self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
+
+
+class WidgetPlacement(QWidget):
+    def __init__(self, d_row, d_places):
+        super().__init__()
+        self.verticalLayout = QVBoxLayout()
+        about = len(str(d_row))
+        for row in range(d_row):
+            place_layout = QHBoxLayout()
+            label = QLabel(f'{row + 1}{"  " * (about - len(str(row + 1)))}')
+            label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+            label.setFont(QFont('PT Mono', 16))
+            place_layout.addWidget(label)
+            for place in range(d_places):
+                button = QPushButton(str(place + 1))
+                button.setFont(QFont('MS Shell Dlg 2', 16))
+                button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+                place_layout.addWidget(button)
+            self.verticalLayout.addLayout(place_layout)
+        indent = QLabel('')
+        indent.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.verticalLayout.addWidget(indent)
+        screen = QLabel('Экран')
+        screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        screen.setFont(QFont('MS Shell Dlg 2', 16))
+        screen.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        screen.setStyleSheet('background: rgb(0, 0, 0); color: rgb(255, 255, 255);')
+        self.verticalLayout.addWidget(screen)
+        self.setLayout(self.verticalLayout)
