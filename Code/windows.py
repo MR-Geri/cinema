@@ -62,7 +62,7 @@ class WindowHall(Window):
         if self.user == 'Администратор':
             action_new_hall = QAction('Добавить сеанс', self)
             action_new_hall.setShortcut('Ctrl+N')
-            action_new_hall.triggered.connect(self.new_hall)
+            action_new_hall.triggered.connect(self.new_session)
             self.ActMenu.addAction(action_new_hall)
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.close)
@@ -81,7 +81,7 @@ class WindowHall(Window):
         )[0]
         return date, time, duration
 
-    def new_hall(self):
+    def new_session(self):
         pass
 
     def edit(self, id_):

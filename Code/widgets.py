@@ -92,7 +92,7 @@ class WidgetHallCard(QWidget):
         #
         self.label_title = QLabel(title)
         self.label_date = QLabel(f'Дата: {date}')
-        self.label_time = QLabel(f'Время: {time}')
+        self.label_time = QLabel(f'Время начала: {time}')
         self.label_duration = QLabel(f'Продолжительность: {duration}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
