@@ -2,6 +2,7 @@ from PyQt5 import uic
 
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
 
 from Code.dialogs import Form_login
 from Code.data_base import get_data_base
@@ -18,8 +19,8 @@ class Window(QMainWindow):
         self.user = user
         self.label_user.setText(self.user)
         #
-        menubar = self.menuBar()
-        self.ActMenu = menubar.addMenu('&Действия')
+        self.menubar = self.menuBar()
+        self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
         action_exit = QAction('Выйти', self)
         action_exit.triggered.connect(self.close)
@@ -56,17 +57,13 @@ class WindowSession(QMainWindow):
         self.user = self.hall.user
         self.session_id = session_id
         #
-        menubar = self.menuBar()
-        self.ActMenu = menubar.addMenu('&Действия')
+        self.menubar = self.menuBar()
+        self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
         #
         self.update_()
 
     def gen_bar(self):
-        if self.user == 'Администратор':
-            action_new_reservation = QAction('Забронировать место', self)
-            action_new_reservation.triggered.connect(self.new_reservations)
-            self.ActMenu.addAction(action_new_reservation)
         action_hall = QAction('Зал', self)
         action_hall.triggered.connect(self.close)
         action_hall.triggered.connect(self.hall.show)
@@ -114,7 +111,7 @@ class WindowHall(Window):
             action_new_hall = QAction('Добавить сеанс', self)
             action_new_hall.setShortcut('Ctrl+N')
             action_new_hall.triggered.connect(self.new_session)
-            self.ActMenu.addAction(action_new_hall)
+            self.menubar.addAction(action_new_hall)
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.close)
         action_cinema.triggered.connect(self.cinema.show)
@@ -160,7 +157,7 @@ class WindowCinema(Window):
             action_new_hall = QAction('Добавить зал', self)
             action_new_hall.setShortcut('Ctrl+N')
             action_new_hall.triggered.connect(self.new_hall)
-            self.ActMenu.addAction(action_new_hall)
+            self.menubar.addAction(action_new_hall)
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.close)
         action_cinemas.triggered.connect(self.cinemas.show)
@@ -204,7 +201,7 @@ class WindowCinemas(Window):
             action_new_cinema = QAction('Добавить кинотеатр', self)
             action_new_cinema.setShortcut('Ctrl+N')
             action_new_cinema.triggered.connect(self.new_cinema)
-            self.ActMenu.addAction(action_new_cinema)
+            self.menubar.addAction(action_new_cinema)
 
     def card_data(self, id_):
         quantity_halls = get_data_base(
@@ -236,16 +233,35 @@ class WindowCinemas(Window):
         self.hide()
 
 
-class WindowStart(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi('../qt/start.ui', self)
+class WindowStart(QWidget):
+    def __init__(self, *args, **kwargs):
+        super(WindowStart, self).__init__(*args, **kwargs)
+        layout = QVBoxLayout(self, spacing=1)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setStyleSheet('background: rgb(255, 186, 0);')
+        #
+        self.image = QLabel('')
+        self.image.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        self.button_create = QPushButton("Создать базу данных")
+        self.button_load = QPushButton("Загрузить базу данных")
+        #
+        self.image.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_create.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_create.setStyleSheet('background: rgb(255, 255, 255);')
+        self.button_load.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_load.setStyleSheet('background: rgb(255, 255, 255);')
+        #
+        layout.addWidget(self.image)
+        layout.addWidget(self.button_create)
+        layout.addWidget(self.button_load)
+        #
         pix_map = QPixmap('../image/start.jpg')
         self.path_base_file = None
         self.cinemas = None
         self.image.setPixmap(pix_map.scaled(365, 400))
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
+        self.setLayout(layout)
 
     def create_base(self):
         pass
