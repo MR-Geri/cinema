@@ -76,9 +76,9 @@ class WindowHall(Window):
     def card_data(self, id_):
         date, time, duration = get_data_base(
             self.cinema.start.path_base_file,
-            """SELECT date, time, duration FROM Sessions WHERE  hall_id = ?""",
+            """SELECT date, time, duration FROM Sessions WHERE id = ?""",
             (id_,)
-        )
+        )[0]
         return date, time, duration
 
     def new_hall(self):
