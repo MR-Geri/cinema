@@ -15,7 +15,7 @@ class TitleBar(QWidget):
     windowClosed = pyqtSignal()
     # Окно мобильных
     windowMoved = pyqtSignal(QPoint)
-    # Сигнал Своя Кнопка +++
+    # Сигнал Своя Кнопка
     signalButtonMy = pyqtSignal()
 
     def __init__(self, *args, **kwargs):
@@ -32,13 +32,12 @@ class TitleBar(QWidget):
         palette.setColor(palette.Window, QColor(240, 240, 240))
         self.setPalette(palette)
 
-        # макет
         layout = QHBoxLayout(self, spacing=0)
         layout.setContentsMargins(0, 0, 0, 0)
 
         # значок окна
         self.iconLabel = QLabel(self)
-        #         self.iconLabel.setScaledContents(True)
+        # self.iconLabel.setScaledContents(True)
         layout.addWidget(self.iconLabel)
 
         # название окна
@@ -49,34 +48,38 @@ class TitleBar(QWidget):
         # Средний телескопический бар
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        # Использовать шрифты Webdings для отображения значков
-        font = self.font() or QFont()
+        # Использовать шрифт для отображения значков
+        font = QFont()
         font.setFamily('Webdings')
 
-        # Своя Кнопка ++++++++++++++++++++++++++
+        # Своя Кнопка
         self.buttonMy = QPushButton(
-            '@', self, clicked=self.showButtonMy, font=font, objectName='buttonMy')
+            'x', self, clicked=self.showButtonMy, font=font, objectName='buttonMy')
+        self.buttonMy.setStyleSheet('color: white;')
         layout.addWidget(self.buttonMy)
 
         # Свернуть кнопку
         self.buttonMinimum = QPushButton(
             '0', self, clicked=self.windowMinimumed.emit, font=font, objectName='buttonMinimum')
+        self.buttonMinimum.setStyleSheet('color: white;')
         layout.addWidget(self.buttonMinimum)
 
-        # Кнопка Max / restore
+        # Кнопка Max
         self.buttonMaximum = QPushButton(
             '1', self, clicked=self.showMaximized, font=font, objectName='buttonMaximum')
+        self.buttonMaximum.setStyleSheet('color: white;')
         layout.addWidget(self.buttonMaximum)
 
         # Кнопка закрытия
         self.buttonClose = QPushButton(
             'r', self, clicked=self.windowClosed.emit, font=font, objectName='buttonClose')
+        self.buttonClose.setStyleSheet('color: white;')
         layout.addWidget(self.buttonClose)
 
         # начальная высота
         self.setHeight()
 
-    # +++ Вызывается по нажатию кнопки buttonMy
+    # Вызывается по нажатию кнопки buttonMy
     def showButtonMy(self):
         print("Своя Кнопка ")
         self.signalButtonMy.emit()
@@ -94,7 +97,7 @@ class TitleBar(QWidget):
         """ Установка высоты строки заголовка """
         self.setMinimumHeight(height)
         self.setMaximumHeight(height)
-        # Задайте размер правой кнопки  ?
+        # Размер правой кнопки
         self.buttonMinimum.setMinimumSize(height, height)
         self.buttonMinimum.setMaximumSize(height, height)
         self.buttonMaximum.setMinimumSize(height, height)
@@ -147,12 +150,11 @@ class TitleBar(QWidget):
 Left, Top, Right, Bottom, LeftTop, RightTop, LeftBottom, RightBottom = range(8)
 
 
-class FramelessWindow(QWidget):
-    # Четыре периметра
+class MainWindow(QWidget):
     Margins = 5
 
     def __init__(self, *args, **kwargs):
-        super(FramelessWindow, self).__init__(*args, **kwargs)
+        super(MainWindow, self).__init__(*args, **kwargs)
         self._pressed = False
         self.Direction = None
 
@@ -207,18 +209,18 @@ class FramelessWindow(QWidget):
         if self.windowState() == Qt.WindowMaximized or self.windowState() == Qt.WindowFullScreen:
             # Максимизировать или полноэкранный режим не допускается
             return
-        super(FramelessWindow, self).move(pos)
+        super(MainWindow, self).move(pos)
 
     def showMaximized(self):
         """ Чтобы максимизировать, удалите верхнюю, нижнюю, левую и правую границы.
             Если вы не удалите его, в пограничной области будут пробелы. """
-        super(FramelessWindow, self).showMaximized()
+        super(MainWindow, self).showMaximized()
         self.layout().setContentsMargins(0, 0, 0, 0)
 
     def showNormal(self):
         """ Восстановить, сохранить верхнюю и нижнюю левую и правую границы,
             иначе нет границы, которую нельзя отрегулировать """
-        super(FramelessWindow, self).showNormal()
+        super(MainWindow, self).showNormal()
         self.layout().setContentsMargins(
             self.Margins, self.Margins, self.Margins, self.Margins)
 
@@ -227,35 +229,35 @@ class FramelessWindow(QWidget):
             управления и восстановления стандартного стиля мыши """
         if isinstance(event, QEnterEvent):
             self.setCursor(Qt.ArrowCursor)
-        return super(FramelessWindow, self).eventFilter(obj, event)
+        return super(MainWindow, self).eventFilter(obj, event)
 
     def paintEvent(self, event):
         """ Поскольку это полностью прозрачное фоновое окно, жесткая для поиска
             граница с прозрачностью 1 рисуется в событии перерисовывания, чтобы отрегулировать размер окна. """
-        super(FramelessWindow, self).paintEvent(event)
+        super(MainWindow, self).paintEvent(event)
         painter = QPainter(self)
         painter.setPen(QPen(QColor(255, 255, 255, 1), 2 * self.Margins))
         painter.drawRect(self.rect())
 
     def mousePressEvent(self, event):
         """ Событие клика мыши """
-        super(FramelessWindow, self).mousePressEvent(event)
+        super(MainWindow, self).mousePressEvent(event)
         if event.button() == Qt.LeftButton:
             self._mpos = event.pos()
             self._pressed = True
 
     def mouseReleaseEvent(self, event):
         """ Событие отказов мыши """
-        super(FramelessWindow, self).mouseReleaseEvent(event)
+        super(MainWindow, self).mouseReleaseEvent(event)
         self._pressed = False
         self.Direction = None
 
     def mouseMoveEvent(self, event):
         """ Событие перемещения мыши """
-        super(FramelessWindow, self).mouseMoveEvent(event)
+        super(MainWindow, self).mouseMoveEvent(event)
         pos = event.pos()
-        xPos, yPos = pos.x(), pos.y()
-        wm, hm = self.width() - self.Margins, self.height() - self.Margins
+        x_pos, y_pos = pos.x(), pos.y()
+        w_m, h_m = self.width() - self.Margins, self.height() - self.Margins
         if self.isMaximized() or self.isFullScreen():
             self.Direction = None
             self.setCursor(Qt.ArrowCursor)
@@ -263,35 +265,35 @@ class FramelessWindow(QWidget):
         if event.buttons() == Qt.LeftButton and self._pressed:
             self._resizeWidget(pos)
             return
-        if xPos <= self.Margins and yPos <= self.Margins:
+        if x_pos <= self.Margins and y_pos <= self.Margins:
             # Верхний левый угол
             self.Direction = LeftTop
             self.setCursor(Qt.SizeFDiagCursor)
-        elif wm <= xPos <= self.width() and hm <= yPos <= self.height():
+        elif w_m <= x_pos <= self.width() and h_m <= y_pos <= self.height():
             # Нижний правый угол
             self.Direction = RightBottom
             self.setCursor(Qt.SizeFDiagCursor)
-        elif wm <= xPos and yPos <= self.Margins:
+        elif w_m <= x_pos and y_pos <= self.Margins:
             # верхний правый угол
             self.Direction = RightTop
             self.setCursor(Qt.SizeBDiagCursor)
-        elif xPos <= self.Margins and hm <= yPos:
+        elif x_pos <= self.Margins and h_m <= y_pos:
             # Нижний левый угол
             self.Direction = LeftBottom
             self.setCursor(Qt.SizeBDiagCursor)
-        elif 0 <= xPos <= self.Margins <= yPos <= hm:
+        elif 0 <= x_pos <= self.Margins <= y_pos <= h_m:
             # Влево
             self.Direction = Left
             self.setCursor(Qt.SizeHorCursor)
-        elif wm <= xPos <= self.width() and self.Margins <= yPos <= hm:
+        elif w_m <= x_pos <= self.width() and self.Margins <= y_pos <= h_m:
             # Право
             self.Direction = Right
             self.setCursor(Qt.SizeHorCursor)
-        elif wm >= xPos >= self.Margins >= yPos >= 0:
+        elif w_m >= x_pos >= self.Margins >= y_pos >= 0:
             # выше
             self.Direction = Top
             self.setCursor(Qt.SizeVerCursor)
-        elif self.Margins <= xPos <= wm and hm <= yPos <= self.height():
+        elif self.Margins <= x_pos <= w_m and h_m <= y_pos <= self.height():
             # ниже
             self.Direction = Bottom
             self.setCursor(Qt.SizeVerCursor)
@@ -300,59 +302,59 @@ class FramelessWindow(QWidget):
         """ Отрегулируйте размер окна """
         if self.Direction is None:
             return
-        mpos = pos - self._mpos
-        xPos, yPos = mpos.x(), mpos.y()
+        m_pos = pos - self._mpos
+        x_pos, y_pos = m_pos.x(), m_pos.y()
         geometry = self.geometry()
         x, y, w, h = geometry.x(), geometry.y(), geometry.width(), geometry.height()
         if self.Direction == LeftTop:  # Верхний левый угол
-            if w - xPos > self.minimumWidth():
-                x += xPos
-                w -= xPos
-            if h - yPos > self.minimumHeight():
-                y += yPos
-                h -= yPos
+            if w - x_pos > self.minimumWidth():
+                x += x_pos
+                w -= x_pos
+            if h - y_pos > self.minimumHeight():
+                y += y_pos
+                h -= y_pos
         elif self.Direction == RightBottom:  # Нижний правый угол
-            if w + xPos > self.minimumWidth():
-                w += xPos
+            if w + x_pos > self.minimumWidth():
+                w += x_pos
                 self._mpos = pos
-            if h + yPos > self.minimumHeight():
-                h += yPos
+            if h + y_pos > self.minimumHeight():
+                h += y_pos
                 self._mpos = pos
         elif self.Direction == RightTop:  # верхний правый угол
-            if h - yPos > self.minimumHeight():
-                y += yPos
-                h -= yPos
-            if w + xPos > self.minimumWidth():
-                w += xPos
+            if h - y_pos > self.minimumHeight():
+                y += y_pos
+                h -= y_pos
+            if w + x_pos > self.minimumWidth():
+                w += x_pos
                 self._mpos.setX(pos.x())
         elif self.Direction == LeftBottom:  # Нижний левый угол
-            if w - xPos > self.minimumWidth():
-                x += xPos
-                w -= xPos
-            if h + yPos > self.minimumHeight():
-                h += yPos
+            if w - x_pos > self.minimumWidth():
+                x += x_pos
+                w -= x_pos
+            if h + y_pos > self.minimumHeight():
+                h += y_pos
                 self._mpos.setY(pos.y())
         elif self.Direction == Left:  # Влево
-            if w - xPos > self.minimumWidth():
-                x += xPos
-                w -= xPos
+            if w - x_pos > self.minimumWidth():
+                x += x_pos
+                w -= x_pos
             else:
                 return
         elif self.Direction == Right:  # Право
-            if w + xPos > self.minimumWidth():
-                w += xPos
+            if w + x_pos > self.minimumWidth():
+                w += x_pos
                 self._mpos = pos
             else:
                 return
         elif self.Direction == Top:  # выше
-            if h - yPos > self.minimumHeight():
-                y += yPos
-                h -= yPos
+            if h - y_pos > self.minimumHeight():
+                y += y_pos
+                h -= y_pos
             else:
                 return
         elif self.Direction == Bottom:  # ниже
-            if h + yPos > self.minimumHeight():
-                h += yPos
+            if h + y_pos > self.minimumHeight():
+                h += y_pos
                 self._mpos = pos
             else:
                 return

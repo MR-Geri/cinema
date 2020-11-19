@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 
-from Code.FramelessWindow import FramelessWindow
+from Code.MyMainWindow import MainWindow
 from Code.windows import WindowStart
 
 
@@ -38,7 +38,7 @@ TitleBar {
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyleSheet(StyleSheet)
-    ex = FramelessWindow()
+    ex = MainWindow()
     ex.setWindowTitle('Кино')
     ex.setWindowIcon(QIcon('../yandex.ico'))
     ex.setWidget(WindowStart(ex))

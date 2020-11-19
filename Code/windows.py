@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
+from Code.MyMainWindow import MainWindow
 from Code.dialogs import Form_login
 from Code.data_base import get_data_base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
@@ -22,9 +23,11 @@ class Window(QMainWindow):
         self.menubar = self.menuBar()
         self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
+        # self.start.main_window.buttonMy.clicked.connect(self.close)
+        # self.start.main_window.buttonMy.clicked.connect(self.start.main_window.show)
         action_exit = QAction('Выйти', self)
         action_exit.triggered.connect(self.close)
-        action_exit.triggered.connect(self.start.show)
+        action_exit.triggered.connect(self.start.main_window.show)
         self.ActMenu.addAction(action_exit)
         #
         self.update_()
@@ -49,17 +52,18 @@ class Window(QMainWindow):
         self.grid.addWidget(self.cards, 1, 0, 2, 0)
 
 
-class WindowSession(QMainWindow):
+class WindowSession(QWidget):
     def __init__(self, hall=None, session_id=None):
         super().__init__()
-        uic.loadUi('../qt/session.ui', self)
         self.hall = hall
         self.user = self.hall.user
         self.session_id = session_id
         #
-        self.menubar = self.menuBar()
-        self.ActMenu = self.menubar.addMenu('&Навигация')
-        self.gen_bar()
+        # self.menubar = self.menuBar()
+        # self.ActMenu = self.menubar.addMenu('&Навигация')
+        # self.gen_bar()
+        self.start.main_window.buttonMy.clicked.connect(self.close)
+        self.start.main_window.buttonMy.clicked.connect(self.start.main_window.show)
         #
         self.update_()
 
@@ -76,10 +80,6 @@ class WindowSession(QMainWindow):
         action_cinemas.triggered.connect(self.close)
         action_cinemas.triggered.connect(self.hall.cinema.cinemas.show)
         self.ActMenu.addAction(action_cinemas)
-        action_exit = QAction('Выйти', self)
-        action_exit.triggered.connect(self.close)
-        action_exit.triggered.connect(self.hall.start.show)
-        self.ActMenu.addAction(action_exit)
 
     def card_data(self, id_):
         pass
@@ -92,7 +92,9 @@ class WindowSession(QMainWindow):
                                         """SELECT rows, places_pow FROM Halls WHERE  id = ?""",
                                         (self.hall.hall_id,))[0]
         place = WidgetPlacement(d_row, d_places)
+        self.grid = QGridLayout()
         self.grid.addWidget(place)
+        self.setLayout(self.grid)
 
 
 class WindowHall(Window):
@@ -136,8 +138,13 @@ class WindowHall(Window):
         pass
 
     def browse(self, id_):
-        self.session = WindowSession(self, id_)
+        self.session = MainWindow()
+        self.session.setWindowTitle('Зал')
+        self.session.setWindowIcon(QIcon('../yandex.ico'))
+        self.session.setWidget(WindowSession(self, id_))
         self.session.show()
+        # self.session = WindowSession(self, id_)
+        # self.session.show()
         self.hide()
 
 
@@ -234,10 +241,11 @@ class WindowCinemas(Window):
 
 
 class WindowStart(QWidget):
-    def __init__(self, *args, **kwargs):
-        super(WindowStart, self).__init__(*args, **kwargs)
-        layout = QVBoxLayout(self, spacing=1)
-        layout.setContentsMargins(0, 0, 0, 0)
+    def __init__(self, main_window):
+        super().__init__()
+        self.main_window = main_window
+        self.layout = QVBoxLayout(self, spacing=1)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet('background: rgb(255, 186, 0);')
         #
         self.image = QLabel('')
@@ -251,9 +259,9 @@ class WindowStart(QWidget):
         self.button_load.setFont(QFont('MS Shell Dlg 2', 16))
         self.button_load.setStyleSheet('background: rgb(255, 255, 255);')
         #
-        layout.addWidget(self.image)
-        layout.addWidget(self.button_create)
-        layout.addWidget(self.button_load)
+        self.layout.addWidget(self.image)
+        self.layout.addWidget(self.button_create)
+        self.layout.addWidget(self.button_load)
         #
         pix_map = QPixmap('../image/start.jpg')
         self.path_base_file = None
@@ -261,7 +269,6 @@ class WindowStart(QWidget):
         self.image.setPixmap(pix_map.scaled(365, 400))
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
-        self.setLayout(layout)
 
     def create_base(self):
         pass
@@ -275,5 +282,5 @@ class WindowStart(QWidget):
             if dialog.exec_() == QDialog.Accepted:
                 self.cinemas = WindowCinemas(self, dialog.user)
                 self.cinemas.show()
-                self.hide()
+                self.main_window.hide()
             dialog.deleteLater()
