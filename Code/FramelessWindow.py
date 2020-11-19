@@ -47,8 +47,7 @@ class TitleBar(QWidget):
         layout.addWidget(self.titleLabel)
 
         # Средний телескопический бар
-        layout.addSpacerItem(QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         # Использовать шрифты Webdings для отображения значков
         font = self.font() or QFont()
@@ -109,6 +108,7 @@ class TitleBar(QWidget):
     def setTitle(self, title):
         """ Установить заголовок """
         self.titleLabel.setText(title)
+        self.titleLabel.setStyleSheet('color: white;')
 
     def setIcon(self, icon):
         """ настройки значокa """
@@ -133,7 +133,7 @@ class TitleBar(QWidget):
         event.accept()
 
     def mouseReleaseEvent(self, event):
-        ''' Событие отказов мыши '''
+        """ Событие отказов мыши """
         self.mPos = None
         event.accept()
 

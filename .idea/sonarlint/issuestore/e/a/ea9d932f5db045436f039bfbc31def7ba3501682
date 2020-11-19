@@ -1,0 +1,7 @@
+
+ypython:S3776ü"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(¬Æäşÿÿÿÿ8“îúåİ.
+ypython:S117€"URename this local variable "xPos" to match the regular expression ^[_a-z][a-z0-9_]*$.(šÕ”üÿÿÿÿ8“îúåİ.
+ypython:S117€"URename this local variable "yPos" to match the regular expression ^[_a-z][a-z0-9_]*$.(šÕ”üÿÿÿÿ8“îúåİ.
+ypython:S3776ª"TRefactor this function to reduce its Cognitive Complexity from 37 to the 15 allowed.(Õã¹çøÿÿÿÿ8“îúåİ.
+spython:S117¯"URename this local variable "xPos" to match the regular expression ^[_a-z][a-z0-9_]*$.(±³­8“îúåİ.
+spython:S117¯"URename this local variable "yPos" to match the regular expression ^[_a-z][a-z0-9_]*$.(±³­8“îúåİ.

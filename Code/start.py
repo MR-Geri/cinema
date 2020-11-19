@@ -9,11 +9,11 @@ from Code.windows import WindowStart
 
 StyleSheet = """
 TitleBar {
-    background-color: rgb(54, 157, 180);
+    background-color: rgb(60, 63, 65);
 }
 #buttonMinimum,#buttonMaximum,#buttonClose, #buttonMy {
     border: none;
-    background-color: rgb(54, 157, 180);
+    background-color: rgb(60, 63, 65);
 }
 #buttonMinimum:hover,#buttonMaximum:hover {
     background-color: rgb(48, 141, 162);
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyleSheet(StyleSheet)
     ex = FramelessWindow()
-    ex.setWindowTitle('Тестовая строка заголовка')
+    ex.setWindowTitle('Кино')
     ex.setWindowIcon(QIcon('../yandex.ico'))
     ex.setWidget(WindowStart(ex))
     ex.show()
