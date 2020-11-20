@@ -88,9 +88,6 @@ class WindowSession(Window):
         action_cinemas.triggered.connect(self.hall.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
 
-    def card_data(self, id_):
-        pass
-
     def reservations(self):
         pass
 

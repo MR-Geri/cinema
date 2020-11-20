@@ -242,7 +242,7 @@ class MainWindow(QWidget):
         """ Событие клика мыши """
         super(MainWindow, self).mousePressEvent(event)
         if event.button() == Qt.LeftButton:
-            self._mpos = event.pos()
+            self._m_pos = event.pos()
             self._pressed = True
 
     def mouseReleaseEvent(self, event):
@@ -301,7 +301,7 @@ class MainWindow(QWidget):
         """ Отрегулируйте размер окна """
         if self.Direction is None:
             return
-        m_pos = pos - self._mpos
+        m_pos = pos - self._m_pos
         x_pos, y_pos = m_pos.x(), m_pos.y()
         geometry = self.geometry()
         x, y, w, h = geometry.x(), geometry.y(), geometry.width(), geometry.height()
@@ -315,24 +315,24 @@ class MainWindow(QWidget):
         elif self.Direction == RightBottom:  # Нижний правый угол
             if w + x_pos > self.minimumWidth():
                 w += x_pos
-                self._mpos = pos
+                self._m_pos = pos
             if h + y_pos > self.minimumHeight():
                 h += y_pos
-                self._mpos = pos
+                self._m_pos = pos
         elif self.Direction == RightTop:  # верхний правый угол
             if h - y_pos > self.minimumHeight():
                 y += y_pos
                 h -= y_pos
             if w + x_pos > self.minimumWidth():
                 w += x_pos
-                self._mpos.setX(pos.x())
+                self._m_pos.setX(pos.x())
         elif self.Direction == LeftBottom:  # Нижний левый угол
             if w - x_pos > self.minimumWidth():
                 x += x_pos
                 w -= x_pos
             if h + y_pos > self.minimumHeight():
                 h += y_pos
-                self._mpos.setY(pos.y())
+                self._m_pos.setY(pos.y())
         elif self.Direction == Left:  # Влево
             if w - x_pos > self.minimumWidth():
                 x += x_pos
@@ -342,7 +342,7 @@ class MainWindow(QWidget):
         elif self.Direction == Right:  # Право
             if w + x_pos > self.minimumWidth():
                 w += x_pos
-                self._mpos = pos
+                self._m_pos = pos
             else:
                 return
         elif self.Direction == Top:  # выше
@@ -354,7 +354,7 @@ class MainWindow(QWidget):
         elif self.Direction == Bottom:  # ниже
             if h + y_pos > self.minimumHeight():
                 h += y_pos
-                self._mpos = pos
+                self._m_pos = pos
             else:
                 return
         self.setGeometry(x, y, w, h)
