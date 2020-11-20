@@ -97,7 +97,10 @@ class WindowSession(Window):
         d_row, d_places = get_data_base(self.path_base_file,
                                         """SELECT rows, places_pow FROM Halls WHERE  id = ?""",
                                         (self.hall.hall_id,))[0]
-        layout.addWidget(WidgetPlacement(d_row, d_places))
+        take_place = get_data_base(self.path_base_file,
+                                   "SELECT p.row, p.place FROM Places p WHERE p.session_id = ?",
+                                   (self.session_id,))
+        layout.addWidget(WidgetPlacement(take_place, d_row, d_places))
         self.grid_card.addLayout(layout, 0, 0)
 
 

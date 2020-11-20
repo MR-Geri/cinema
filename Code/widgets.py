@@ -2,6 +2,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from Code.data_base import get_data_base
+
 
 class WidgetCinemasCard(QWidget):
     def __init__(self, user, title, quantity_halls, quantity_sessions, quantity_places):
@@ -122,7 +124,7 @@ class WidgetHallCard(QWidget):
 
 
 class WidgetPlacement(QWidget):
-    def __init__(self, d_row, d_places):
+    def __init__(self, data, d_row, d_places):
         super().__init__()
         self.verticalLayout = QVBoxLayout()
         about = len(str(d_row))
@@ -136,6 +138,11 @@ class WidgetPlacement(QWidget):
                 button = QPushButton(str(place + 1))
                 button.setFont(QFont('MS Shell Dlg 2', 16))
                 button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+                if (row, place) in data:
+                    print(1)
+                    button.setStyleSheet('color: rbg(128, 128, 128)')
+                else:
+                    button.setStyleSheet('color: rbg(0, 0, 0)')
                 place_layout.addWidget(button)
             self.verticalLayout.addLayout(place_layout)
         indent = QLabel('')
