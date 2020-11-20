@@ -54,7 +54,7 @@ class TitleBar(QWidget):
 
         # Своя Кнопка
         self.buttonMy = QPushButton(
-            'x', self, clicked=self.showButtonMy, font=font, objectName='buttonMy')
+            'i', self, clicked=self.showButtonMy, font=font, objectName='buttonMy')
         self.buttonMy.setStyleSheet('color: white;')
         layout.addWidget(self.buttonMy)
 

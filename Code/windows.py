@@ -10,24 +10,24 @@ from Code.data_base import get_data_base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
 
 
-class Window(QMainWindow):
+class Window(QWidget):
     def __init__(self, start=None, user='Пользователь'):
         super().__init__()
-        uic.loadUi('../qt/window.ui', self)
         self.cards = None
         self.start = start
         self.path_base_file = start.path_base_file
         self.user = user
-        self.label_user.setText(self.user)
+        self.grid = QGridLayout()
+        self.label_user = QLabel(self.user)
+        self.grid.addWidget(self.label_user, 0, 0)
+        self.setLayout(self.grid)
         #
-        self.menubar = self.menuBar()
+        self.menubar = QMenuBar(self)
         self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
-        # self.start.main_window.buttonMy.clicked.connect(self.close)
-        # self.start.main_window.buttonMy.clicked.connect(self.start.main_window.show)
         action_exit = QAction('Выйти', self)
-        action_exit.triggered.connect(self.close)
-        action_exit.triggered.connect(self.start.main_window.show)
+        action_exit.triggered.connect(self.window.close)
+        action_exit.triggered.connect(self.start.window.show)
         self.ActMenu.addAction(action_exit)
         #
         self.update_()
@@ -55,31 +55,35 @@ class Window(QMainWindow):
 class WindowSession(QWidget):
     def __init__(self, hall=None, session_id=None):
         super().__init__()
+        self.window = hall.session
+        self.start = hall.start
         self.hall = hall
         self.user = self.hall.user
         self.session_id = session_id
         #
-        # self.menubar = self.menuBar()
-        # self.ActMenu = self.menubar.addMenu('&Навигация')
-        # self.gen_bar()
-        self.start.main_window.buttonMy.clicked.connect(self.close)
-        self.start.main_window.buttonMy.clicked.connect(self.start.main_window.show)
+        self.menubar = QMenuBar(self)
+        self.ActMenu = self.menubar.addMenu('&Навигация')
+        self.gen_bar()
         #
         self.update_()
 
     def gen_bar(self):
         action_hall = QAction('Зал', self)
-        action_hall.triggered.connect(self.close)
-        action_hall.triggered.connect(self.hall.show)
+        action_hall.triggered.connect(self.window.close)
+        action_hall.triggered.connect(self.hall.window.show)
         self.ActMenu.addAction(action_hall)
         action_cinema = QAction('Кинотеатр', self)
-        action_cinema.triggered.connect(self.close)
-        action_cinema.triggered.connect(self.hall.cinema.show)
+        action_cinema.triggered.connect(self.window.close)
+        action_cinema.triggered.connect(self.hall.cinema.window.show)
         self.ActMenu.addAction(action_cinema)
         action_cinemas = QAction('Кинотеатры', self)
-        action_cinemas.triggered.connect(self.close)
-        action_cinemas.triggered.connect(self.hall.cinema.cinemas.show)
+        action_cinemas.triggered.connect(self.window.close)
+        action_cinemas.triggered.connect(self.hall.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
+        action_exit = QAction('Выйти', self)
+        action_exit.triggered.connect(self.window.close)
+        action_exit.triggered.connect(self.start.window.show)
+        self.ActMenu.addAction(action_exit)
 
     def card_data(self, id_):
         pass
@@ -99,6 +103,7 @@ class WindowSession(QWidget):
 
 class WindowHall(Window):
     def __init__(self, cinema=None, hall_id=None):
+        self.window = cinema.hall
         self.session = None
         self.cinema = cinema
         self.hall_id = hall_id
@@ -115,12 +120,12 @@ class WindowHall(Window):
             action_new_hall.triggered.connect(self.new_session)
             self.menubar.addAction(action_new_hall)
         action_cinema = QAction('Кинотеатр', self)
-        action_cinema.triggered.connect(self.close)
-        action_cinema.triggered.connect(self.cinema.show)
+        action_cinema.triggered.connect(self.window.close)
+        action_cinema.triggered.connect(self.cinema.window.show)
         self.ActMenu.addAction(action_cinema)
         action_cinemas = QAction('Кинотеатры', self)
-        action_cinemas.triggered.connect(self.close)
-        action_cinemas.triggered.connect(self.cinema.cinemas.show)
+        action_cinemas.triggered.connect(self.window.close)
+        action_cinemas.triggered.connect(self.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
 
     def card_data(self, id_):
@@ -139,17 +144,16 @@ class WindowHall(Window):
 
     def browse(self, id_):
         self.session = MainWindow()
-        self.session.setWindowTitle('Зал')
+        self.session.setWindowTitle('Сеанс')
         self.session.setWindowIcon(QIcon('../yandex.ico'))
         self.session.setWidget(WindowSession(self, id_))
         self.session.show()
-        # self.session = WindowSession(self, id_)
-        # self.session.show()
-        self.hide()
+        self.window.hide()
 
 
 class WindowCinema(Window):
     def __init__(self, cinemas=None, cinema_id=None):
+        self.window = cinemas.cinema
         self.hall = None
         self.cinemas = cinemas
         self.cinema_id = cinema_id
@@ -166,8 +170,8 @@ class WindowCinema(Window):
             action_new_hall.triggered.connect(self.new_hall)
             self.menubar.addAction(action_new_hall)
         action_cinemas = QAction('Кинотеатры', self)
-        action_cinemas.triggered.connect(self.close)
-        action_cinemas.triggered.connect(self.cinemas.show)
+        action_cinemas.triggered.connect(self.window.close)
+        action_cinemas.triggered.connect(self.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
 
     def card_data(self, id_):
@@ -191,13 +195,17 @@ class WindowCinema(Window):
         pass
 
     def browse(self, id_):
-        self.hall = WindowHall(self, id_)
+        self.hall = MainWindow()
+        self.hall.setWindowTitle('Зал')
+        self.hall.setWindowIcon(QIcon('../yandex.ico'))
+        self.hall.setWidget(WindowHall(self, id_))
         self.hall.show()
-        self.hide()
+        self.window.hide()
 
 
 class WindowCinemas(Window):
     def __init__(self, start=None, user='Пользователь'):
+        self.window = start.cinemas
         self.cinema = None
         self.card = WidgetCinemasCard
         self.base = get_data_base(start.path_base_file, """SELECT id, title FROM Cinemas""")
@@ -235,15 +243,18 @@ class WindowCinemas(Window):
         pass
 
     def browse(self, id_):
-        self.cinema = WindowCinema(self, id_)
+        self.cinema = MainWindow()
+        self.cinema.setWindowTitle('Кинотеатр')
+        self.cinema.setWindowIcon(QIcon('../yandex.ico'))
+        self.cinema.setWidget(WindowCinema(self, id_))
         self.cinema.show()
-        self.hide()
+        self.window.hide()
 
 
 class WindowStart(QWidget):
-    def __init__(self, main_window):
+    def __init__(self, window=None):
         super().__init__()
-        self.main_window = main_window
+        self.window = window
         self.layout = QVBoxLayout(self, spacing=1)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet('background: rgb(255, 186, 0);')
@@ -280,7 +291,10 @@ class WindowStart(QWidget):
         if self.path_base_file:
             dialog = Form_login()
             if dialog.exec_() == QDialog.Accepted:
-                self.cinemas = WindowCinemas(self, dialog.user)
+                self.cinemas = MainWindow()
+                self.cinemas.setWindowTitle('Кинотеатры')
+                self.cinemas.setWindowIcon(QIcon('../yandex.ico'))
+                self.cinemas.setWidget(WindowCinemas(self, dialog.user))
                 self.cinemas.show()
-                self.main_window.hide()
+                self.window.hide()
             dialog.deleteLater()

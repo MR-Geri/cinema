@@ -11,9 +11,5 @@ A
 qt/login.ui,d\9\d90dc4b321c1a5de7dc9e74a22fd99041b0dd90a
 @
 qt/form_login.ui,c\d\cdc1f1012c805002db81f2dfd56164e2d5c0f1a6
-=
-qt/session.ui,5\b\5bafbb24da8e808cea35a8a1f4d27d6d2368ecc4
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
-G
-Code/FramelessWindow.py,e\a\ea9d932f5db045436f039bfbc31def7ba3501682
