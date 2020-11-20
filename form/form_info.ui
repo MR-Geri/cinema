@@ -61,7 +61,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Яндекс Кино&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Версия: 0.9.5&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Разработал: Камкин И. Д.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;GitHub: https://github.com/MR-Geri/&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Руководитель: Кондрашин Ю. А.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Яндекс Кино&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Версия: 0.9.5&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;GitHub: https://github.com/MR-Geri/&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Разработал: Камкин И. Д.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Руководитель: Кондрашин Ю. А.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

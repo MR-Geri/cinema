@@ -24,7 +24,7 @@ TitleBar {
 }
 #buttonMy:hover {
     color: white;
-    background-color: green;   /* rgb(232, 17, 35) */
+    background-color: green;
 }
 #buttonMinimum:pressed,#buttonMaximum:pressed {
     background-color: rgb(44, 125, 144);
