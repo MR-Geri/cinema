@@ -1,5 +1,3 @@
-from PyQt5 import uic
-
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
@@ -17,18 +15,33 @@ class Window(QWidget):
         self.start = start
         self.path_base_file = start.path_base_file
         self.user = user
-        self.grid = QGridLayout()
-        self.label_user = QLabel(self.user)
-        self.grid.addWidget(self.label_user, 0, 0)
-        self.setLayout(self.grid)
         #
-        self.menubar = QMenuBar(self)
+        self.grid = QGridLayout(spacing=0)
+        self.grid.setContentsMargins(0, 0, 0, 0)
+        self.grid_card = QGridLayout(spacing=0)
+        self.grid_card.setContentsMargins(3, 3, 3, 3)
+        #
+        self.menubar = QMenuBar()
+        self.menubar.setMaximumHeight(31)
+        #
         self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
         action_exit = QAction('Выйти', self)
         action_exit.triggered.connect(self.window.close)
         action_exit.triggered.connect(self.start.window.show)
         self.ActMenu.addAction(action_exit)
+        #
+        self.label_user = QLabel(self.user)
+        self.label_user.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_user.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
+        self.label_user.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        #
+        self.window.resize(800, 800)
+        #
+        self.setLayout(self.grid)
+        self.grid.addWidget(self.menubar)
+        self.grid.addWidget(self.label_user)
+        self.grid.addLayout(self.grid_card, 3, 0)
         #
         self.update_()
 
@@ -41,6 +54,8 @@ class Window(QWidget):
 
     def update_(self):
         self.cards = QListWidget()
+        layout = QGridLayout()
+        layout.addWidget(self.cards)
         for id_, title in self.base:
             #
             card = self.gen_card(id_, title)
@@ -49,23 +64,15 @@ class Window(QWidget):
             q_list_card.setSizeHint(card.sizeHint())
             self.cards.addItem(q_list_card)
             self.cards.setItemWidget(q_list_card, card)
-        self.grid.addWidget(self.cards, 1, 0, 2, 0)
+        self.grid_card.addLayout(layout, 0, 0)
 
 
-class WindowSession(QWidget):
+class WindowSession(Window):
     def __init__(self, hall=None, session_id=None):
-        super().__init__()
         self.window = hall.session
-        self.start = hall.start
         self.hall = hall
-        self.user = self.hall.user
         self.session_id = session_id
-        #
-        self.menubar = QMenuBar(self)
-        self.ActMenu = self.menubar.addMenu('&Навигация')
-        self.gen_bar()
-        #
-        self.update_()
+        super().__init__(self.hall.start, self.hall.user)
 
     def gen_bar(self):
         action_hall = QAction('Зал', self)
@@ -80,25 +87,20 @@ class WindowSession(QWidget):
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.hall.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
-        action_exit = QAction('Выйти', self)
-        action_exit.triggered.connect(self.window.close)
-        action_exit.triggered.connect(self.start.window.show)
-        self.ActMenu.addAction(action_exit)
 
     def card_data(self, id_):
         pass
 
-    def new_reservations(self):
+    def reservations(self):
         pass
 
     def update_(self):
-        d_row, d_places = get_data_base(self.hall.start.path_base_file,
+        layout = QGridLayout()
+        d_row, d_places = get_data_base(self.path_base_file,
                                         """SELECT rows, places_pow FROM Halls WHERE  id = ?""",
                                         (self.hall.hall_id,))[0]
-        place = WidgetPlacement(d_row, d_places)
-        self.grid = QGridLayout()
-        self.grid.addWidget(place)
-        self.setLayout(self.grid)
+        layout.addWidget(WidgetPlacement(d_row, d_places))
+        self.grid_card.addLayout(layout, 0, 0)
 
 
 class WindowHall(Window):

@@ -160,7 +160,6 @@ class MainWindow(QWidget):
 
         # Фон прозрачный
         self.setAttribute(Qt.WA_TranslucentBackground, True)
-
         # Нет границы
         self.setWindowFlag(Qt.FramelessWindowHint)
         # Отслеживание мыши
