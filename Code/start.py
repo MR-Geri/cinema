@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from Code.MyMainWindow import MainWindow
 from Code.windows import WindowStart
-
+from settings import *
 
 StyleSheet = """
 TitleBar {
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     app.setStyleSheet(StyleSheet)
     ex = MainWindow()
     ex.setWindowTitle('Кино')
-    ex.setWindowIcon(QIcon('../yandex.ico'))
+    ex.setWindowIcon(QIcon(path_icon))
     ex.setWidget(WindowStart(ex))
     ex.show()
     sys.exit(app.exec_())

@@ -1,7 +1,9 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QPoint
 from PyQt5.QtGui import QFont, QEnterEvent, QPainter, QColor, QPen
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                             QSpacerItem, QSizePolicy, QPushButton)
+                             QSpacerItem, QSizePolicy, QPushButton, QDialog)
+
+from Code.dialogs import FormInfo
 
 
 class TitleBar(QWidget):
@@ -16,7 +18,7 @@ class TitleBar(QWidget):
     # Окно мобильных
     windowMoved = pyqtSignal(QPoint)
     # Сигнал Своя Кнопка
-    signalButtonMy = pyqtSignal()
+    signalButtonInfo = pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(TitleBar, self).__init__(*args, **kwargs)
@@ -53,10 +55,10 @@ class TitleBar(QWidget):
         font.setFamily('Webdings')
 
         # Своя Кнопка
-        self.buttonMy = QPushButton(
-            'i', self, clicked=self.showButtonMy, font=font, objectName='buttonMy')
-        self.buttonMy.setStyleSheet('color: white;')
-        layout.addWidget(self.buttonMy)
+        self.buttonInfo = QPushButton(
+            'i', self, clicked=self.showButtonInfo, font=font, objectName='buttonMy')
+        self.buttonInfo.setStyleSheet('color: white;')
+        layout.addWidget(self.buttonInfo)
 
         # Свернуть кнопку
         self.buttonMinimum = QPushButton(
@@ -80,9 +82,12 @@ class TitleBar(QWidget):
         self.setHeight()
 
     # Вызывается по нажатию кнопки buttonMy
-    def showButtonMy(self):
+    def showButtonInfo(self):
+        dialog = FormInfo()
+        dialog.exec_()
+        dialog.deleteLater()
         print("Своя Кнопка ")
-        self.signalButtonMy.emit()
+        self.signalButtonInfo.emit()
 
     def showMaximized(self):
         if self.buttonMaximum.text() == '1':
@@ -105,8 +110,8 @@ class TitleBar(QWidget):
         self.buttonClose.setMinimumSize(height, height)
         self.buttonClose.setMaximumSize(height, height)
 
-        self.buttonMy.setMinimumSize(height, height)
-        self.buttonMy.setMaximumSize(height, height)
+        self.buttonInfo.setMinimumSize(height, height)
+        self.buttonInfo.setMaximumSize(height, height)
 
     def setTitle(self, title):
         """ Установить заголовок """

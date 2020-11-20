@@ -3,9 +3,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 from Code.MyMainWindow import MainWindow
-from Code.dialogs import Form_login
+from Code.dialogs import FormLogin
 from Code.data_base import get_data_base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
+from settings import *
 
 
 class Window(QWidget):
@@ -144,7 +145,7 @@ class WindowHall(Window):
     def browse(self, id_):
         self.session = MainWindow()
         self.session.setWindowTitle('Сеанс')
-        self.session.setWindowIcon(QIcon('../yandex.ico'))
+        self.session.setWindowIcon(QIcon(path_icon))
         self.session.setWidget(WindowSession(self, id_))
         self.session.show()
         self.window.hide()
@@ -196,7 +197,7 @@ class WindowCinema(Window):
     def browse(self, id_):
         self.hall = MainWindow()
         self.hall.setWindowTitle('Зал')
-        self.hall.setWindowIcon(QIcon('../yandex.ico'))
+        self.hall.setWindowIcon(QIcon(path_icon))
         self.hall.setWidget(WindowHall(self, id_))
         self.hall.show()
         self.window.hide()
@@ -244,7 +245,7 @@ class WindowCinemas(Window):
     def browse(self, id_):
         self.cinema = MainWindow()
         self.cinema.setWindowTitle('Кинотеатр')
-        self.cinema.setWindowIcon(QIcon('../yandex.ico'))
+        self.cinema.setWindowIcon(QIcon(path_icon))
         self.cinema.setWidget(WindowCinema(self, id_))
         self.cinema.show()
         self.window.hide()
@@ -253,6 +254,9 @@ class WindowCinemas(Window):
 class WindowStart(QWidget):
     def __init__(self, window=None):
         super().__init__()
+        self.path_base_file = None
+        self.cinemas = None
+        #
         self.window = window
         self.layout = QVBoxLayout(self, spacing=1)
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -263,7 +267,6 @@ class WindowStart(QWidget):
         self.button_create = QPushButton("Создать базу данных")
         self.button_load = QPushButton("Загрузить базу данных")
         #
-        self.image.setFont(QFont('MS Shell Dlg 2', 16))
         self.button_create.setFont(QFont('MS Shell Dlg 2', 16))
         self.button_create.setStyleSheet('background: rgb(255, 255, 255);')
         self.button_load.setFont(QFont('MS Shell Dlg 2', 16))
@@ -273,9 +276,7 @@ class WindowStart(QWidget):
         self.layout.addWidget(self.button_create)
         self.layout.addWidget(self.button_load)
         #
-        pix_map = QPixmap('../image/start.jpg')
-        self.path_base_file = None
-        self.cinemas = None
+        pix_map = QPixmap(path_image_start)
         self.image.setPixmap(pix_map.scaled(365, 400))
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
@@ -288,11 +289,11 @@ class WindowStart(QWidget):
             self, 'Выбрать базу', '',
             'SQLite (*.sqlite);;Все файлы (*)')[0]
         if self.path_base_file:
-            dialog = Form_login()
+            dialog = FormLogin()
             if dialog.exec_() == QDialog.Accepted:
                 self.cinemas = MainWindow()
                 self.cinemas.setWindowTitle('Кинотеатры')
-                self.cinemas.setWindowIcon(QIcon('../yandex.ico'))
+                self.cinemas.setWindowIcon(QIcon(path_icon))
                 self.cinemas.setWidget(WindowCinemas(self, dialog.user))
                 self.cinemas.show()
                 self.window.hide()
