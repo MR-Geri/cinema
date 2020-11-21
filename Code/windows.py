@@ -272,9 +272,11 @@ class WindowStart(QWidget):
         self.button_load = QPushButton("Загрузить базу данных")
         #
         self.button_create.setFont(QFont('MS Shell Dlg 2', 16))
-        self.button_create.setStyleSheet('background: rgb(255, 255, 255);')
+        self.button_create.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
+                                         'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         self.button_load.setFont(QFont('MS Shell Dlg 2', 16))
-        self.button_load.setStyleSheet('background: rgb(255, 255, 255);')
+        self.button_load.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
+                                       'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         #
         self.layout.addWidget(self.image)
         self.layout.addWidget(self.button_create)

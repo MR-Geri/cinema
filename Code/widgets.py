@@ -2,8 +2,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from Code.data_base import get_data_base
-
 
 class WidgetCinemasCard(QWidget):
     def __init__(self, user, title, quantity_halls, quantity_sessions, quantity_places):
@@ -150,23 +148,37 @@ class WidgetPlacement(QWidget):
             label.setFont(QFont('PT Mono', 16))
             place_layout.addWidget(label)
             for place in range(self.d_places):
-                button = QPushButton(str(place + 1))
+                button = QPushButton(str(place + 1), objectName='buttonPlace')
                 button.setFont(QFont('MS Shell Dlg 2', 16))
                 button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
                 if (row + 1, place + 1) in self.data:
-                    button.setStyleSheet('background: rgb(31, 174, 233)')
+                    button.setStyleSheet(
+                        '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
+                        '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
+                    )
                     button.clicked.connect(lambda s, b=button: self.click_free(b))
                 else:
-                    button.setStyleSheet('background: rgb(225, 225, 225)')
+                    button.setStyleSheet(
+                        '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
+                        '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
+                    )
                     button.clicked.connect(lambda s, b=button: self.click_occupy(b))
                 place_layout.addWidget(button)
             self.verticalLayout.addLayout(place_layout)
         self.setLayout(self.verticalLayout)
 
     def click_free(self, button):
-        button.setStyleSheet('background: rgb(225, 225, 225)')
+        # Сделать форму подтверждения принятия (1) и форму отмены (2)
+        button.setStyleSheet(
+            '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
+            '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
+        )
         button.clicked.connect(lambda s, b=button: self.click_occupy(b))
 
     def click_occupy(self, button):
-        button.setStyleSheet('background: rgb(31, 174, 233)')
+        # Сделать форму подтверждения принятия (1) и форму отмены (2)
+        button.setStyleSheet(
+            '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
+            '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
+        )
         button.clicked.connect(lambda s, b=button: self.click_free(b))

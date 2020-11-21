@@ -17,7 +17,7 @@ class TitleBar(QWidget):
     windowClosed = pyqtSignal()
     # Окно мобильных
     windowMoved = pyqtSignal(QPoint)
-    # Сигнал Своя Кнопка
+    # Сигнал информации
     signalButtonInfo = pyqtSignal()
 
     def __init__(self, *args, **kwargs):
@@ -56,32 +56,28 @@ class TitleBar(QWidget):
 
         # Своя Кнопка
         self.buttonInfo = QPushButton(
-            'i', self, clicked=self.showButtonInfo, font=font, objectName='buttonMy')
-        self.buttonInfo.setStyleSheet('color: white;')
+            'i', self, clicked=self.showButtonInfo, font=font, objectName='buttonInfo')
         layout.addWidget(self.buttonInfo)
 
         # Свернуть кнопку
         self.buttonMinimum = QPushButton(
             '0', self, clicked=self.windowMinimumed.emit, font=font, objectName='buttonMinimum')
-        self.buttonMinimum.setStyleSheet('color: white;')
         layout.addWidget(self.buttonMinimum)
 
         # Кнопка Max
         self.buttonMaximum = QPushButton(
             '1', self, clicked=self.showMaximized, font=font, objectName='buttonMaximum')
-        self.buttonMaximum.setStyleSheet('color: white;')
         layout.addWidget(self.buttonMaximum)
 
         # Кнопка закрытия
         self.buttonClose = QPushButton(
             'r', self, clicked=self.windowClosed.emit, font=font, objectName='buttonClose')
-        self.buttonClose.setStyleSheet('color: white;')
         layout.addWidget(self.buttonClose)
 
         # начальная высота
         self.setHeight()
 
-    # Вызывается по нажатию кнопки buttonMy
+    # Вызывается по нажатию кнопки buttonInfo
     def showButtonInfo(self):
         dialog = FormInfo()
         dialog.exec_()

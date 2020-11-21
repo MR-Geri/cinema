@@ -16,6 +16,9 @@ class Login(QDialog):
         self.line_login.textChanged.connect(self.update_line)
         self.line_password.textChanged.connect(self.update_line)
 
+        self.button_sign_in.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
+                                          'QPushButton:hover {background-color: rgb(200, 200, 200);}')
+
     def update_line(self):
         self.label_info.setText('Введите логин и пароль')
 
@@ -35,6 +38,10 @@ class FormLogin(QDialog):
         self.setWindowIcon(QIcon(path_icon))
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
+        self.button_cashier.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
+                                          'QPushButton:hover {background-color: rgb(200, 200, 200);}')
+        self.button_admin.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
+                                        'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         self.user = None
 
     def cashier(self):

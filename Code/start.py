@@ -11,26 +11,29 @@ StyleSheet = """
 TitleBar {
     background-color: rgb(60, 63, 65);
 }
-#buttonMinimum,#buttonMaximum,#buttonClose, #buttonMy {
+#buttonMinimum,#buttonMaximum,#buttonClose, #buttonInfo {
     border: none;
     background-color: rgb(60, 63, 65);
+    color: white;
 }
 #buttonMinimum:hover,#buttonMaximum:hover {
+    color: black;
     background-color: rgb(48, 141, 162);
 }
 #buttonClose:hover {
-    color: white;
+    color: black;
     background-color: rgb(232, 17, 35);
 }
-#buttonMy:hover {
-    color: white;
+#buttonInfo:hover {
+    color: black;
     background-color: green;
 }
 #buttonMinimum:pressed,#buttonMaximum:pressed {
+    color: black;
     background-color: rgb(44, 125, 144);
 }
 #buttonClose:pressed {
-    color: white;
+    color: black;
     background-color: rgb(161, 73, 92);
 }
 """
