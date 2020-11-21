@@ -126,32 +126,47 @@ class WidgetHallCard(QWidget):
 class WidgetPlacement(QWidget):
     def __init__(self, data, d_row, d_places):
         super().__init__()
+        self.data = data
+        self.d_row = d_row
+        self.d_places = d_places
+        self.update_()
+
+    def update_(self):
         self.verticalLayout = QVBoxLayout()
-        about = len(str(d_row))
-        for row in range(d_row):
-            place_layout = QHBoxLayout()
-            label = QLabel(f'{row + 1}{"  " * (about - len(str(row + 1)))}')
-            label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
-            label.setFont(QFont('PT Mono', 16))
-            place_layout.addWidget(label)
-            for place in range(d_places):
-                button = QPushButton(str(place + 1))
-                button.setFont(QFont('MS Shell Dlg 2', 16))
-                button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-                if (row, place) in data:
-                    print(1)
-                    button.setStyleSheet('color: rbg(128, 128, 128)')
-                else:
-                    button.setStyleSheet('color: rbg(0, 0, 0)')
-                place_layout.addWidget(button)
-            self.verticalLayout.addLayout(place_layout)
-        indent = QLabel('')
-        indent.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        self.verticalLayout.addWidget(indent)
         screen = QLabel('Экран')
         screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         screen.setFont(QFont('MS Shell Dlg 2', 16))
         screen.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         screen.setStyleSheet('background: rgb(0, 0, 0); color: rgb(255, 255, 255);')
         self.verticalLayout.addWidget(screen)
+        indent = QLabel('')
+        indent.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.verticalLayout.addWidget(indent)
+        about = len(str(self.d_row))
+        for row in range(self.d_row):
+            place_layout = QHBoxLayout()
+            label = QLabel(f'{row + 1}{"  " * (about - len(str(row + 1)))}')
+            label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+            label.setFont(QFont('PT Mono', 16))
+            place_layout.addWidget(label)
+            for place in range(self.d_places):
+                button = QPushButton(str(place + 1))
+                button.setFont(QFont('MS Shell Dlg 2', 16))
+                button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+                if (row + 1, place + 1) in self.data:
+                    button.setStyleSheet('background: rgb(31, 174, 233)')
+                    button.clicked.connect(lambda s, b=button: self.click_free(b))
+                else:
+                    button.setStyleSheet('')
+                    button.clicked.connect(lambda s, b=button: self.click_occupy(b))
+                place_layout.addWidget(button)
+            self.verticalLayout.addLayout(place_layout)
         self.setLayout(self.verticalLayout)
+
+    def click_free(self, button):
+        button.setStyleSheet('')
+        button.clicked.connect(lambda s, b=button: self.click_occupy(b))
+
+    def click_occupy(self, button):
+        button.setStyleSheet('background: rgb(31, 174, 233)')
+        button.clicked.connect(lambda s, b=button: self.click_free(b))

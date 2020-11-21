@@ -74,6 +74,7 @@ class WindowSession(Window):
         self.hall = hall
         self.session_id = session_id
         super().__init__(self.hall.start, self.hall.user)
+        self.label_user.hide()
 
     def gen_bar(self):
         action_hall = QAction('Зал', self)
