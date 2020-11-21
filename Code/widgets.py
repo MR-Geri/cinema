@@ -157,14 +157,14 @@ class WidgetPlacement(QWidget):
                     button.setStyleSheet('background: rgb(31, 174, 233)')
                     button.clicked.connect(lambda s, b=button: self.click_free(b))
                 else:
-                    button.setStyleSheet('')
+                    button.setStyleSheet('background: rgb(225, 225, 225)')
                     button.clicked.connect(lambda s, b=button: self.click_occupy(b))
                 place_layout.addWidget(button)
             self.verticalLayout.addLayout(place_layout)
         self.setLayout(self.verticalLayout)
 
     def click_free(self, button):
-        button.setStyleSheet('')
+        button.setStyleSheet('background: rgb(225, 225, 225)')
         button.clicked.connect(lambda s, b=button: self.click_occupy(b))
 
     def click_occupy(self, button):
