@@ -291,6 +291,14 @@ class WindowStart(QWidget):
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
 
+    def cinemas_init(self, user):
+        self.cinemas = MainWindow()
+        self.cinemas.setWindowTitle('Кинотеатры')
+        self.cinemas.setWindowIcon(QIcon(path_icon))
+        self.cinemas.setWidget(WindowCinemas(self, user))
+        self.cinemas.show()
+        self.window.hide()
+
     def create_base(self):
         dialog = Login()
         if dialog.exec_() == QDialog.Accepted:
@@ -309,7 +317,7 @@ class WindowStart(QWidget):
                                         unique,
                                     title STRING  not null
                                 );
-                                """)
+                        """)
                         base.execute("""
                                 create table Halls
                                 (
@@ -322,10 +330,10 @@ class WindowStart(QWidget):
                                     rows       INTEGER not null,
                                     places_pow INTEGER not null
                                 );
-                                """)
+                        """)
                         base.execute("""
                                 create unique index Halls_id_uindex on Halls (id);
-                                """)
+                        """)
                         base.execute("""
                                 create table Sessions
                                 (
@@ -339,7 +347,7 @@ class WindowStart(QWidget):
                                     time     TEXT    not null,
                                     duration TEXT    not null
                                 );
-                                """)
+                        """)
                         base.execute("""
                                 create table Places
                                 (
@@ -351,15 +359,10 @@ class WindowStart(QWidget):
                                     session_id INTEGER
                                         references Sessions
                                 );
-                                """)
+                        """)
                 shutil.copy2(temp_path, self.path_base_file)
                 os.remove(temp_path)
-                self.cinemas = MainWindow()
-                self.cinemas.setWindowTitle('Кинотеатры')
-                self.cinemas.setWindowIcon(QIcon(path_icon))
-                self.cinemas.setWidget(WindowCinemas(self, 'Администратор'))
-                self.cinemas.show()
-                self.window.hide()
+                self.cinemas_init('Администратор')
         dialog.deleteLater()
 
     def load_base(self):
@@ -369,10 +372,5 @@ class WindowStart(QWidget):
         if self.path_base_file:
             dialog = FormLogin()
             if dialog.exec_() == QDialog.Accepted:
-                self.cinemas = MainWindow()
-                self.cinemas.setWindowTitle('Кинотеатры')
-                self.cinemas.setWindowIcon(QIcon(path_icon))
-                self.cinemas.setWidget(WindowCinemas(self, dialog.user))
-                self.cinemas.show()
-                self.window.hide()
+                self.cinemas_init(dialog.user)
             dialog.deleteLater()
