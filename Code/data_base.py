@@ -11,6 +11,7 @@ def get_base(path: str, is_commit=False):
     finally:
         if is_commit:
             con.commit()
+            con.close()
         else:
             con.close()
 

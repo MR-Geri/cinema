@@ -1,10 +1,14 @@
+import datetime
+import os
+import shutil
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 from Code.MyMainWindow import MainWindow
-from Code.dialogs import FormLogin
-from Code.data_base import get_data_base
+from Code.dialogs import FormLogin, Login
+from Code.data_base import get_data_base, get_base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
 from settings import *
 
@@ -288,7 +292,75 @@ class WindowStart(QWidget):
         self.button_load.clicked.connect(self.load_base)
 
     def create_base(self):
-        pass
+        dialog = Login()
+        if dialog.exec_() == QDialog.Accepted:
+            self.path_base_file = os.path.abspath(QFileDialog.getSaveFileName(
+                self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
+            if self.path_base_file:
+                date = datetime.datetime.now().strftime("_%d-%m-%Y_%H-%M-%S-%f")
+                temp_path = os.path.abspath(f'../temp/temp_base{date}.sqlite')
+                with open(temp_path, mode='w') as file:
+                    with get_base(temp_path, True) as base:
+                        base.execute("""
+                                create table Cinemas
+                                (
+                                    id    INTEGER not null
+                                        primary key autoincrement
+                                        unique,
+                                    title STRING  not null
+                                );
+                                """)
+                        base.execute("""
+                                create table Halls
+                                (
+                                    id         INTEGER not null
+                                        constraint Halls_pk
+                                            primary key autoincrement,
+                                    title      STRING  not null,
+                                    cinema_id  INTEGER not null
+                                        references Cinemas,
+                                    rows       INTEGER not null,
+                                    places_pow INTEGER not null
+                                );
+                                """)
+                        base.execute("""
+                                create unique index Halls_id_uindex on Halls (id);
+                                """)
+                        base.execute("""
+                                create table Sessions
+                                (
+                                    id       INTEGER not null
+                                        primary key autoincrement
+                                        unique,
+                                    title    STRING  not null,
+                                    hall_id  INTEGER not null
+                                        references Halls,
+                                    date     TEXT    not null,
+                                    time     TEXT    not null,
+                                    duration TEXT    not null
+                                );
+                                """)
+                        base.execute("""
+                                create table Places
+                                (
+                                    id         INTEGER not null
+                                        primary key autoincrement
+                                        unique,
+                                    row        INTEGER not null,
+                                    place      INTEGER not null,
+                                    session_id INTEGER
+                                        references Sessions
+                                );
+                                """)
+                shutil.copy2(temp_path, self.path_base_file)
+                os.remove(temp_path)
+                self.cinemas = MainWindow()
+                self.cinemas.setWindowTitle('Кинотеатры')
+                self.cinemas.setWindowIcon(QIcon(path_icon))
+                self.cinemas.setWidget(WindowCinemas(self, 'Администратор'))
+                self.cinemas.show()
+                self.window.hide()
+        dialog.deleteLater()
 
     def load_base(self):
         self.path_base_file = QFileDialog.getOpenFileName(

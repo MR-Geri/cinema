@@ -9,3 +9,13 @@ A
 Code/windows.py,4\7\47af8105c970e4194b1169d6583fb87bd175946e
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+D
+Code/MyMainWindow.py,a\d\adde12316fd656fd054365231adf72c1b183be80
+;
+settings.py,8\8\888c15d72e41c9f0f1882f4aea4c2d19f1a044eb
+?
+Code/dialogs.py,e\d\ed81671667dcb39233944ea69143d65a43fab4e4
+=
+accounts.json,0\4\0401533f97e6164460db5120bcbd0b2f5f45fa33
