@@ -1,7 +1,8 @@
-from PyQt5.QtCore import Qt, pyqtSignal, QPoint
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import Qt, pyqtSignal, QPoint, QObject
 from PyQt5.QtGui import QFont, QEnterEvent, QPainter, QColor, QPen
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                             QSpacerItem, QSizePolicy, QPushButton, QDialog)
+                             QSpacerItem, QSizePolicy, QPushButton)
 
 from Code.dialogs import FormInfo
 
@@ -20,7 +21,7 @@ class TitleBar(QWidget):
     # Сигнал информации
     signalButtonInfo = pyqtSignal()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(TitleBar, self).__init__(*args, **kwargs)
 
         # Поддержка настройки фона qss
@@ -78,14 +79,14 @@ class TitleBar(QWidget):
         self.setHeight()
 
     # Вызывается по нажатию кнопки buttonInfo
-    def showButtonInfo(self):
+    def showButtonInfo(self) -> None:
         dialog = FormInfo()
         dialog.exec_()
         dialog.deleteLater()
         print("Своя Кнопка ")
         self.signalButtonInfo.emit()
 
-    def showMaximized(self):
+    def showMaximized(self) -> None:
         if self.buttonMaximum.text() == '1':
             # Максимизировать
             self.buttonMaximum.setText('2')
@@ -94,7 +95,7 @@ class TitleBar(QWidget):
             self.buttonMaximum.setText('1')
             self.windowNormaled.emit()
 
-    def setHeight(self, height=38):
+    def setHeight(self, height: int = 38) -> None:
         """ Установка высоты строки заголовка """
         self.setMinimumHeight(height)
         self.setMaximumHeight(height)
@@ -109,39 +110,39 @@ class TitleBar(QWidget):
         self.buttonInfo.setMinimumSize(height, height)
         self.buttonInfo.setMaximumSize(height, height)
 
-    def setTitle(self, title):
+    def setTitle(self, title: str = '') -> None:
         """ Установить заголовок """
         self.titleLabel.setText(title)
         self.titleLabel.setStyleSheet('color: white;')
 
-    def setIcon(self, icon):
+    def setIcon(self, icon: QtGui) -> None:
         """ настройки значокa """
         self.iconLabel.setPixmap(icon.pixmap(self.iconSize, self.iconSize))
 
-    def setIconSize(self, size):
+    def setIconSize(self, size) -> None:
         """ Установить размер значка """
         self.iconSize = size
 
-    def enterEvent(self, event):
+    def enterEvent(self, event: QtGui) -> None:
         self.setCursor(Qt.ArrowCursor)
         super(TitleBar, self).enterEvent(event)
 
-    def mouseDoubleClickEvent(self, event):
+    def mouseDoubleClickEvent(self, event: QtGui) -> None:
         super(TitleBar, self).mouseDoubleClickEvent(event)
         self.showMaximized()
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QtGui) -> None:
         """ Событие клика мыши """
         if event.button() == Qt.LeftButton:
             self.mPos = event.pos()
         event.accept()
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event: QtGui) -> None:
         """ Событие отказов мыши """
         self.mPos = None
         event.accept()
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QtGui) -> None:
         if event.buttons() == Qt.LeftButton and self.mPos:
             self.windowMoved.emit(self.mapToGlobal(event.pos() - self.mPos))
         event.accept()
@@ -154,7 +155,7 @@ Left, Top, Right, Bottom, LeftTop, RightTop, LeftBottom, RightBottom = range(8)
 class MainWindow(QWidget):
     Margins = 5
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(MainWindow, self).__init__(*args, **kwargs)
         self._pressed = False
         self.Direction = None
@@ -184,15 +185,15 @@ class MainWindow(QWidget):
         self.windowTitleChanged.connect(self.titleBar.setTitle)
         self.windowIconChanged.connect(self.titleBar.setIcon)
 
-    def setTitleBarHeight(self, height=38):
+    def setTitleBarHeight(self, height: int = 38) -> None:
         """ Установка высоты строки заголовка """
         self.titleBar.setHeight(height)
 
-    def setIconSize(self, size):
+    def setIconSize(self, size) -> None:
         """ Установка размера значка """
         self.titleBar.setIconSize(size)
 
-    def setWidget(self, widget):
+    def setWidget(self, widget: QWidget) -> None:
         """ Настройте свои собственные элементы управления """
         if hasattr(self, '_widget'):
             return
@@ -205,33 +206,33 @@ class MainWindow(QWidget):
         self._widget.installEventFilter(self)
         self.layout().addWidget(self._widget)
 
-    def move(self, pos):
+    def move(self, pos: QtCore) -> None:
         if self.windowState() == Qt.WindowMaximized or self.windowState() == Qt.WindowFullScreen:
             # Максимизировать или полноэкранный режим не допускается
             return
         super(MainWindow, self).move(pos)
 
-    def showMaximized(self):
+    def showMaximized(self) -> None:
         """ Чтобы максимизировать, удалите верхнюю, нижнюю, левую и правую границы.
             Если вы не удалите его, в пограничной области будут пробелы. """
         super(MainWindow, self).showMaximized()
         self.layout().setContentsMargins(0, 0, 0, 0)
 
-    def showNormal(self):
+    def showNormal(self) -> None:
         """ Восстановить, сохранить верхнюю и нижнюю левую и правую границы,
             иначе нет границы, которую нельзя отрегулировать """
         super(MainWindow, self).showNormal()
         self.layout().setContentsMargins(
             self.Margins, self.Margins, self.Margins, self.Margins)
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj: QObject, event: QtGui):
         """ Фильтр событий, используемый для решения мыши в других элементах
             управления и восстановления стандартного стиля мыши """
         if isinstance(event, QEnterEvent):
             self.setCursor(Qt.ArrowCursor)
         return super(MainWindow, self).eventFilter(obj, event)
 
-    def paintEvent(self, event):
+    def paintEvent(self, event: QtGui) -> None:
         """ Поскольку это полностью прозрачное фоновое окно, жесткая для поиска
             граница с прозрачностью 1 рисуется в событии перерисовывания, чтобы отрегулировать размер окна. """
         super(MainWindow, self).paintEvent(event)
@@ -239,20 +240,20 @@ class MainWindow(QWidget):
         painter.setPen(QPen(QColor(255, 255, 255, 1), 2 * self.Margins))
         painter.drawRect(self.rect())
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QtGui) -> None:
         """ Событие клика мыши """
         super(MainWindow, self).mousePressEvent(event)
         if event.button() == Qt.LeftButton:
             self._m_pos = event.pos()
             self._pressed = True
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event: QtGui) -> None:
         """ Событие отказов мыши """
         super(MainWindow, self).mouseReleaseEvent(event)
         self._pressed = False
         self.Direction = None
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QtGui) -> None:
         """ Событие перемещения мыши """
         super(MainWindow, self).mouseMoveEvent(event)
         pos = event.pos()
@@ -298,7 +299,7 @@ class MainWindow(QWidget):
             self.Direction = Bottom
             self.setCursor(Qt.SizeVerCursor)
 
-    def _resizeWidget(self, pos):
+    def _resizeWidget(self, pos: QtCore) -> None:
         """ Отрегулируйте размер окна """
         if self.Direction is None:
             return
