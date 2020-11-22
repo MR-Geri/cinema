@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import *
 
 
 class WidgetCinemasCard(QWidget):
-    def __init__(self, user, title, quantity_halls, quantity_sessions, quantity_places):
+    def __init__(self, user: str, title: str, quantity_halls: int,
+                 quantity_sessions: int, quantity_places: int) -> None:
         super().__init__()
         self.gridLayout = QGridLayout()
         #
@@ -39,7 +40,7 @@ class WidgetCinemasCard(QWidget):
 
 
 class WidgetCinemaCard(QWidget):
-    def __init__(self, user, title, quantity_sessions, quantity_places, sessions):
+    def __init__(self, user: str, title: str, quantity_sessions: int, quantity_places: int, sessions: list) -> None:
         super().__init__()
         self.gridLayout = QGridLayout()
         #
@@ -87,7 +88,7 @@ class WidgetCinemaCard(QWidget):
 
 
 class WidgetHallCard(QWidget):
-    def __init__(self, user, title, date, time, duration):
+    def __init__(self, user: str, title: str, date: str, time: str, duration: str) -> None:
         super().__init__()
         self.gridLayout = QGridLayout()
         #
@@ -122,14 +123,14 @@ class WidgetHallCard(QWidget):
 
 
 class WidgetPlacement(QWidget):
-    def __init__(self, data, d_row, d_places):
+    def __init__(self, take_place: list, d_row: int, d_places: int) -> None:
         super().__init__()
-        self.data = data
+        self.take_place = take_place
         self.d_row = d_row
         self.d_places = d_places
         self.update_()
 
-    def update_(self):
+    def update_(self) -> None:
         self.verticalLayout = QVBoxLayout()
         screen = QLabel('Экран')
         screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
@@ -143,6 +144,7 @@ class WidgetPlacement(QWidget):
         about = len(str(self.d_row))
         for row in range(self.d_row):
             place_layout = QHBoxLayout()
+            #
             label = QLabel(f'{row + 1}{"  " * (about - len(str(row + 1)))}')
             label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
             label.setFont(QFont('PT Mono', 16))
@@ -151,7 +153,7 @@ class WidgetPlacement(QWidget):
                 button = QPushButton(str(place + 1), objectName='buttonPlace')
                 button.setFont(QFont('MS Shell Dlg 2', 16))
                 button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-                if (row + 1, place + 1) in self.data:
+                if (row + 1, place + 1) in self.take_place:
                     button.setStyleSheet(
                         '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
                         '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
@@ -167,7 +169,7 @@ class WidgetPlacement(QWidget):
             self.verticalLayout.addLayout(place_layout)
         self.setLayout(self.verticalLayout)
 
-    def click_free(self, button):
+    def click_free(self, button: QPushButton) -> None:
         # Сделать форму подтверждения принятия (1) и форму отмены (2)
         button.setStyleSheet(
             '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
@@ -175,7 +177,7 @@ class WidgetPlacement(QWidget):
         )
         button.clicked.connect(lambda s, b=button: self.click_occupy(b))
 
-    def click_occupy(self, button):
+    def click_occupy(self, button: QPushButton) -> None:
         # Сделать форму подтверждения принятия (1) и форму отмены (2)
         button.setStyleSheet(
             '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
