@@ -45,14 +45,14 @@
      <number>5</number>
     </property>
     <item row="2" column="0">
-     <widget class="QPushButton" name="button_add">
+     <widget class="QPushButton" name="button_save">
       <property name="font">
        <font>
         <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
-       <string>Добавить</string>
+       <string>Сохранить</string>
       </property>
      </widget>
     </item>
@@ -75,6 +75,9 @@
         <pointsize>16</pointsize>
        </font>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="0" column="0" colspan="2">
@@ -92,7 +95,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Введите название кинотеатра:</string>
+       <string>Название кинотеатра:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

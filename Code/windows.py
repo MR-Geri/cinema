@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 from Code.MyMainWindow import MainWindow
-from Code.dialogs import FormLogin, Login, FormNewCinema, FormNewHall
+from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormInfoText, FormSession
 from Code.data_base import get_data_base, get_base, Base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
 from settings import *
@@ -222,12 +222,20 @@ class WindowCinemas(Window):
         return quantity_halls, quantity_sessions, quantity_places
 
     def new_cinema(self) -> None:
-        dialog = FormNewCinema()
+        dialog = FormCinema()
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
-                base.execute("""
-                INSERT INTO Cinemas (id, title) VALUES ((SELECT id FROM Cinemas ORDER BY id DESC LIMIT 1) + 1, ?);
-                """, (dialog.line_input_title.text(), ))
+                count = int(get_data_base(self.path_base_file,
+                                          """SELECT COUNT(*) FROM Cinemas WHERE title = ?""",
+                                          (dialog.line_input_title.text(),))[0][0])
+                if count == 0:
+                    base.execute("""
+                    INSERT INTO Cinemas (id, title) VALUES ((SELECT id FROM Cinemas ORDER BY id DESC LIMIT 1) + 1, ?);
+                    """, (dialog.line_input_title.text(), ))
+                else:
+                    dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
+                    dialog_.exec_()
+                    self.new_cinema()
         dialog.deleteLater()
         self.update_()
 
@@ -281,17 +289,25 @@ class WindowCinema(Window):
         return quantity_sessions, quantity_places, sessions
 
     def new_hall(self) -> None:
-        dialog = FormNewHall()
+        dialog = FormHall()
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
-                base.execute("""
-                INSERT INTO Halls (id, title, cinema_id, rows, places_row) 
-                VALUES ((SELECT id FROM Cinemas ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?);
-                """, (
-                    dialog.line_input_title.text(),
-                    self.cinema_id,
-                    dialog.line_input_rows.text(),
-                    dialog.line_input_places_row.text()))
+                count = int(get_data_base(self.path_base_file,
+                                          """SELECT COUNT(*) FROM Cinemas WHERE title = ?""",
+                                          (dialog.line_input_title.text(),))[0][0])
+                if count == 0:
+                    base.execute("""
+                                    INSERT INTO Halls (id, title, cinema_id, rows, places_row) 
+                                    VALUES ((SELECT id FROM Halls ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?);
+                                    """, (
+                        dialog.line_input_title.text(),
+                        self.cinema_id,
+                        dialog.line_input_rows.value(),
+                        dialog.line_input_places_row.value()))
+                else:
+                    dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
+                    dialog_.exec_()
+                    self.new_hall()
         dialog.deleteLater()
         self.update_()
 
@@ -343,7 +359,29 @@ class WindowHall(Window):
         return date, time, duration
 
     def new_session(self) -> None:
-        pass
+        dialog = FormSession()
+        if dialog.exec_() == QDialog.Accepted:
+            with get_base(self.path_base_file, True) as base:
+                # count = int(get_data_base(self.path_base_file,
+                #                           """SELECT COUNT(*) FROM Sessions WHERE title = ?""",
+                #                           (dialog.line_input_title.text(),))[0][0])
+                count = 0  # Нужна проверка на пересечение времени
+                if count == 0:
+                    base.execute("""
+                                    INSERT INTO Sessions (id, title, hall_id, date, time, duration)
+                                    VALUES ((SELECT id FROM Sessions ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?, ?);
+                                    """, (
+                        dialog.line_input_title.text(),
+                        self.hall_id,
+                        dialog.date.dateTime().toString('dd.MM.yyyy'),
+                        dialog.time.dateTime().toString('HH:mm'),
+                        dialog.duration.dateTime().toString('HH:mm')))
+                else:
+                    dialog_ = FormInfoText(f'Сеанс с таким названием уже есть.')
+                    dialog_.exec_()
+                    self.new_hall()
+        dialog.deleteLater()
+        self.update_()
 
     def edit(self, id_: int) -> None:
         pass
