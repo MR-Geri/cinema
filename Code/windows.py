@@ -14,7 +14,7 @@ from settings import *
 
 
 class Window(QWidget):
-    def __init__(self, start=None, user='Пользователь', if_create_base=False):
+    def __init__(self, start=None, user='Пользователь'):
         super().__init__()
         self.cards = None
         self.start = start
@@ -34,8 +34,6 @@ class Window(QWidget):
         action_exit = QAction('Выйти', self)
         action_exit.triggered.connect(self.window.close)
         action_exit.triggered.connect(self.start.window.show)
-        if if_create_base:
-            action_exit.triggered.connect(lambda action: os.remove(self.path_base_file))
         self.ActMenu.addAction(action_exit)
         #
         self.label_user = QLabel(self.user)
@@ -214,12 +212,12 @@ class WindowCinema(Window):
 
 
 class WindowCinemas(Window):
-    def __init__(self, start=None, user='Пользователь', if_create_base=False):
+    def __init__(self, start=None, user='Пользователь'):
         self.window = start.cinemas
         self.cinema = None
         self.card = WidgetCinemasCard
         self.base = get_data_base(start.path_base_file, """SELECT id, title FROM Cinemas""")
-        super().__init__(start, user, if_create_base)
+        super().__init__(start, user)
 
     def gen_bar(self):
         if self.user == 'Администратор':
@@ -293,27 +291,21 @@ class WindowStart(QWidget):
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
 
-    def cinemas_init(self, widget):
+    def cinemas_init(self, user):
+        self.cinemas = MainWindow()
         self.cinemas.setWindowTitle('Кинотеатры')
         self.cinemas.setWindowIcon(QIcon(path_icon))
-        self.cinemas.setWidget(widget)
+        self.cinemas.setWidget(WindowCinemas(self, user))
         self.cinemas.show()
         self.window.hide()
-
-    def save_base(self):
-        temp_path = os.path.abspath(QFileDialog.getSaveFileName(
-            self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
-        if temp_path:
-            shutil.copy2(self.path_base_file, temp_path)
-        os.remove(self.path_base_file)
 
     def create_base(self):
         dialog = Login()
         if dialog.exec_() == QDialog.Accepted:
             date = datetime.datetime.now().strftime("_%d-%m-%Y_%H-%M-%S-%f")
-            self.path_base_file = os.path.abspath(f'../temp/temp_base{date}.sqlite')
-            with open(self.path_base_file, mode='w') as file:
-                with get_base(self.path_base_file, True) as base:
+            temp_base_path = os.path.abspath(f'../temp/temp_base{date}.sqlite')
+            with open(temp_base_path, mode='w') as file:
+                with get_base(temp_base_path, True) as base:
                     base.execute("""
                                             create table Cinemas
                                             (
@@ -365,13 +357,12 @@ class WindowStart(QWidget):
                                                     references Sessions
                                             );
                                     """)
-            self.cinemas = MainWindow()
-            _widget = WindowCinemas(self, 'Администратор', if_create_base=True)
-            action_save = QAction('Сохранить как', self)
-            action_save.setShortcut('Ctrl+S')
-            action_save.triggered.connect(self.save_base)
-            _widget.menubar.addAction(action_save)
-            self.cinemas_init(_widget)
+            self.path_base_file = os.path.abspath(QFileDialog.getSaveFileName(
+                self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
+            if self.path_base_file:
+                shutil.copy2(temp_base_path, self.path_base_file)
+                self.cinemas_init('Администратор')
+            os.remove(temp_base_path)
         dialog.deleteLater()
 
     def load_base(self):
@@ -381,6 +372,5 @@ class WindowStart(QWidget):
         if self.path_base_file:
             dialog = FormLogin()
             if dialog.exec_() == QDialog.Accepted:
-                self.cinemas = MainWindow()
-                self.cinemas_init(WindowCinemas(self, dialog.user))
+                self.cinemas_init(dialog.user)
             dialog.deleteLater()

@@ -11,8 +11,7 @@ def get_base(path: str, is_commit=False):
     finally:
         if is_commit:
             con.commit()
-        else:
-            con.close()
+        con.close()
 
 
 def get_data_base(path: str, get_url: str, params=None) -> list:
