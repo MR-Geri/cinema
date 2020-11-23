@@ -222,7 +222,7 @@ class WindowCinemas(Window):
         return quantity_halls, quantity_sessions, quantity_places
 
     def new_cinema(self) -> None:
-        dialog = FormCinema()
+        dialog = FormCinema('Добавление кинотеатра')
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
                 count = int(get_data_base(self.path_base_file,
@@ -236,11 +236,19 @@ class WindowCinemas(Window):
                     dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
                     dialog_.exec_()
                     self.new_cinema()
+            self.update_()
         dialog.deleteLater()
-        self.update_()
 
     def edit(self, id_: int) -> None:
-        pass
+        dialog = FormCinema('Изменение кинотеатра',
+                            get_data_base(self.path_base_file,
+                                          """SELECT title FROM Cinemas WHERE id = ?""",
+                                          (id_,))[0][0])
+        if dialog.exec_() == QDialog.Accepted:
+            with get_base(self.path_base_file, True) as base:
+                base.execute("""UPDATE Cinemas SET title = ? WHERE id = ?""", (dialog.title.text(), id_))
+            self.update_()
+        dialog.deleteLater()
 
     def browse(self, id_: int) -> None:
         self.cinema = MainWindow()
@@ -289,7 +297,7 @@ class WindowCinema(Window):
         return quantity_sessions, quantity_places, sessions
 
     def new_hall(self) -> None:
-        dialog = FormHall()
+        dialog = FormHall('Добавление зала')
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
                 count = int(get_data_base(self.path_base_file,
@@ -308,11 +316,20 @@ class WindowCinema(Window):
                     dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
                     dialog_.exec_()
                     self.new_hall()
+            self.update_()
         dialog.deleteLater()
-        self.update_()
 
     def edit(self, id_: int) -> None:
-        pass
+        dialog = FormHall('Изменение зала',
+                          *get_data_base(self.path_base_file,
+                                         """SELECT title, rows, places_row FROM Halls WHERE id = ?""",
+                                         (id_,))[0])
+        if dialog.exec_() == QDialog.Accepted:
+            with get_base(self.path_base_file, True) as base:
+                base.execute("""UPDATE Halls SET title = ?, rows = ?, places_row = ? WHERE id = ?""",
+                             (dialog.title.text(), dialog.rows.value(), dialog.places_row.value(), id_))
+            self.update_()
+        dialog.deleteLater()
 
     def browse(self, id_: int) -> None:
         self.hall = MainWindow()
@@ -359,7 +376,7 @@ class WindowHall(Window):
         return date, time, duration
 
     def new_session(self) -> None:
-        dialog = FormSession()
+        dialog = FormSession('Добавление сеанса')
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
                 # count = int(get_data_base(self.path_base_file,
@@ -380,11 +397,24 @@ class WindowHall(Window):
                     dialog_ = FormInfoText(f'Сеанс с таким названием уже есть.')
                     dialog_.exec_()
                     self.new_hall()
+            self.update_()
         dialog.deleteLater()
-        self.update_()
 
     def edit(self, id_: int) -> None:
-        pass
+        dialog = FormSession('Изменение зала',
+                             *get_data_base(self.path_base_file,
+                                            """SELECT title, date, time, duration FROM Sessions WHERE id = ?""",
+                                            (id_,))[0])
+        if dialog.exec_() == QDialog.Accepted:
+            with get_base(self.path_base_file, True) as base:
+                base.execute("""UPDATE Sessions SET title = ?, date = ?, time = ?, duration = ? WHERE id = ?""",
+                             (dialog.title.text(),
+                              dialog.date.dateTime().toString('dd.MM.yyyy'),
+                              dialog.time.dateTime().toString('HH:mm'),
+                              dialog.duration.dateTime().toString('HH:mm'),
+                              id_))
+            self.update_()
+        dialog.deleteLater()
 
     def browse(self, id_: int) -> None:
         self.session = MainWindow()

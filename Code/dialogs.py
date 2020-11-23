@@ -1,3 +1,4 @@
+import datetime
 import json
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QIcon
@@ -78,9 +79,10 @@ class FormInfoText(QDialog):
 
 
 class FormCinema(QDialog):
-    def __init__(self, title: str = '') -> None:
+    def __init__(self, title_window: str = '', title: str = '') -> None:
         super().__init__()
         uic.loadUi('../form/cinema.ui', self)
+        self.setWindowTitle(title_window)
         self.title.setText(title)
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
@@ -88,9 +90,10 @@ class FormCinema(QDialog):
 
 
 class FormHall(QDialog):
-    def __init__(self, title: str = '', rows: int = 1, places_row: int = 1) -> None:
+    def __init__(self, title_window: str = '',  title: str = '', rows: int = 1, places_row: int = 1) -> None:
         super().__init__()
         uic.loadUi('../form/hall.ui', self)
+        self.setWindowTitle(title_window)
         self.title.setText(title)
         self.rows.setValue(rows)
         self.places_row.setValue(places_row)
@@ -100,14 +103,16 @@ class FormHall(QDialog):
 
 
 class FormSession(QDialog):
-    def __init__(self, title: str = '', date: tuple = (2000, 1, 1),
-                 time: tuple = (0, 0), duration: tuple = (0, 0)) -> None:
+    def __init__(self, title_window: str = '', title: str = '', date: str = '1.1.2000',
+                 time: str = '0:0', duration: str = '0:0') -> None:
         super().__init__()
         uic.loadUi('../form/session.ui', self)
+        self.setWindowTitle(title_window)
         self.title.setText(title)
-        self.date.setDate(date)
-        self.time.setTime(time)
-        self.duration.setTime(duration)
+        self.date.setDate(datetime.date(*reversed(list(map(int, date.split('.'))))))
+        self.time.setTime(datetime.time(*map(int, time.split(':'))))
+        self.duration.setTime(datetime.time(*map(int, duration.split(':'))))
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
         self.setLayout(self.gridLayout)
+
