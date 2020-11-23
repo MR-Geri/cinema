@@ -67,11 +67,21 @@ class FormInfo(QDialog):
         self.setLayout(self.gridLayout)
 
 
+class FormInfoText(QDialog):
+    def __init__(self, text: str = '') -> None:
+        super().__init__()
+        uic.loadUi('../form/form_info.ui', self)
+        self.setWindowIcon(QIcon(path_icon))
+        self.image.hide()
+        self.label.setText(text)
+        self.setLayout(self.gridLayout)
+
+
 class FormCinema(QDialog):
     def __init__(self, title: str = '') -> None:
         super().__init__()
         uic.loadUi('../form/cinema.ui', self)
-        self.line_input_title.setText(title)
+        self.title.setText(title)
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
         self.setLayout(self.gridLayout)
@@ -81,29 +91,23 @@ class FormHall(QDialog):
     def __init__(self, title: str = '', rows: int = 1, places_row: int = 1) -> None:
         super().__init__()
         uic.loadUi('../form/hall.ui', self)
-        self.line_input_title.setText(title)
-        self.line_input_rows.setValue(rows)
-        self.line_input_places_row.setValue(places_row)
+        self.title.setText(title)
+        self.rows.setValue(rows)
+        self.places_row.setValue(places_row)
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
         self.setLayout(self.gridLayout)
 
 
 class FormSession(QDialog):
-    def __init__(self, title: str = '') -> None:
+    def __init__(self, title: str = '', date: tuple = (2000, 1, 1),
+                 time: tuple = (0, 0), duration: tuple = (0, 0)) -> None:
         super().__init__()
         uic.loadUi('../form/session.ui', self)
-        self.line_input_title.setText(title)
+        self.title.setText(title)
+        self.date.setDate(date)
+        self.time.setTime(time)
+        self.duration.setTime(duration)
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
-        self.setLayout(self.gridLayout)
-
-
-class FormInfoText(QDialog):
-    def __init__(self, text: str = '') -> None:
-        super().__init__()
-        uic.loadUi('../form/form_info.ui', self)
-        self.setWindowIcon(QIcon(path_icon))
-        self.image.hide()
-        self.label.setText(text)
         self.setLayout(self.gridLayout)

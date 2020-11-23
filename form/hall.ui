@@ -67,7 +67,7 @@
      </widget>
     </item>
     <item row="3" column="0" colspan="2">
-     <widget class="QSpinBox" name="line_input_rows">
+     <widget class="QSpinBox" name="rows">
       <property name="font">
        <font>
         <pointsize>16</pointsize>
@@ -141,7 +141,7 @@
      </widget>
     </item>
     <item row="1" column="0" colspan="2">
-     <widget class="QLineEdit" name="line_input_title">
+     <widget class="QLineEdit" name="title">
       <property name="font">
        <font>
         <pointsize>16</pointsize>
@@ -165,7 +165,7 @@
      </widget>
     </item>
     <item row="5" column="0" colspan="2">
-     <widget class="QSpinBox" name="line_input_places_row">
+     <widget class="QSpinBox" name="places_row">
       <property name="font">
        <font>
         <pointsize>16</pointsize>

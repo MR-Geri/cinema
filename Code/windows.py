@@ -227,11 +227,11 @@ class WindowCinemas(Window):
             with get_base(self.path_base_file, True) as base:
                 count = int(get_data_base(self.path_base_file,
                                           """SELECT COUNT(*) FROM Cinemas WHERE title = ?""",
-                                          (dialog.line_input_title.text(),))[0][0])
+                                          (dialog.title.text(),))[0][0])
                 if count == 0:
                     base.execute("""
                     INSERT INTO Cinemas (id, title) VALUES ((SELECT id FROM Cinemas ORDER BY id DESC LIMIT 1) + 1, ?);
-                    """, (dialog.line_input_title.text(), ))
+                    """, (dialog.title.text(), ))
                 else:
                     dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
                     dialog_.exec_()
@@ -294,16 +294,16 @@ class WindowCinema(Window):
             with get_base(self.path_base_file, True) as base:
                 count = int(get_data_base(self.path_base_file,
                                           """SELECT COUNT(*) FROM Cinemas WHERE title = ?""",
-                                          (dialog.line_input_title.text(),))[0][0])
+                                          (dialog.title.text(),))[0][0])
                 if count == 0:
                     base.execute("""
                                     INSERT INTO Halls (id, title, cinema_id, rows, places_row) 
                                     VALUES ((SELECT id FROM Halls ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?);
                                     """, (
-                        dialog.line_input_title.text(),
+                        dialog.title.text(),
                         self.cinema_id,
-                        dialog.line_input_rows.value(),
-                        dialog.line_input_places_row.value()))
+                        dialog.rows.value(),
+                        dialog.places_row.value()))
                 else:
                     dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
                     dialog_.exec_()
@@ -364,14 +364,14 @@ class WindowHall(Window):
             with get_base(self.path_base_file, True) as base:
                 # count = int(get_data_base(self.path_base_file,
                 #                           """SELECT COUNT(*) FROM Sessions WHERE title = ?""",
-                #                           (dialog.line_input_title.text(),))[0][0])
+                #                           (dialog.title.text(),))[0][0])
                 count = 0  # Нужна проверка на пересечение времени
                 if count == 0:
                     base.execute("""
                                     INSERT INTO Sessions (id, title, hall_id, date, time, duration)
                                     VALUES ((SELECT id FROM Sessions ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?, ?);
                                     """, (
-                        dialog.line_input_title.text(),
+                        dialog.title.text(),
                         self.hall_id,
                         dialog.date.dateTime().toString('dd.MM.yyyy'),
                         dialog.time.dateTime().toString('HH:mm'),
