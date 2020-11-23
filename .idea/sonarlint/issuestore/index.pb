@@ -19,3 +19,9 @@ D
 Code/dialogs.py,e\d\ed81671667dcb39233944ea69143d65a43fab4e4
 =
 accounts.json,0\4\0401533f97e6164460db5120bcbd0b2f5f45fa33
+>
+form/cinema.ui,d\f\dfb521646df6315f6176192921b9fd53e2a12ede
+<
+form/hall.ui,5\0\505cc9ab99dd08cfcc640a4c837a7adfe1178791
+?
+form/session.ui,d\5\d5a98a17a68ae039f7e03bff9e3111f8bb29f737

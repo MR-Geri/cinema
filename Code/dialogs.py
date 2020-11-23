@@ -1,5 +1,7 @@
 import datetime
 import json
+import os
+
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QSizePolicy
@@ -11,7 +13,8 @@ from settings import *
 class Login(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi('../form/login.ui', self)
+        path = os.path.abspath('../form/login.ui')
+        uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
         self.button_sign_in.clicked.connect(self.sign_in)
         self.line_login.textChanged.connect(self.update_line)
@@ -35,7 +38,8 @@ class Login(QDialog):
 class FormLogin(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi('../form/form_login.ui', self)
+        path = os.path.abspath('../form/form_login.ui')
+        uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
@@ -60,7 +64,8 @@ class FormLogin(QDialog):
 class FormInfo(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi('../form/form_info.ui', self)
+        path = os.path.abspath('../form/form_info.ui')
+        uic.loadUi(path, self)
         pix_map = QPixmap(path_image_start)
         self.setWindowIcon(QIcon(path_icon))
         self.image.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
@@ -71,7 +76,8 @@ class FormInfo(QDialog):
 class FormInfoText(QDialog):
     def __init__(self, text: str = '') -> None:
         super().__init__()
-        uic.loadUi('../form/form_info.ui', self)
+        path = os.path.abspath('../form/form_info.ui')
+        uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
         self.image.hide()
         self.label.setText(text)
@@ -81,7 +87,8 @@ class FormInfoText(QDialog):
 class FormCinema(QDialog):
     def __init__(self, title_window: str = '', title: str = '') -> None:
         super().__init__()
-        uic.loadUi('../form/cinema.ui', self)
+        path = os.path.abspath('../form/cinema.ui')
+        uic.loadUi(path, self)
         self.setWindowTitle(title_window)
         self.title.setText(title)
         self.button_save.clicked.connect(self.accept)
@@ -92,7 +99,8 @@ class FormCinema(QDialog):
 class FormHall(QDialog):
     def __init__(self, title_window: str = '',  title: str = '', rows: int = 1, places_row: int = 1) -> None:
         super().__init__()
-        uic.loadUi('../form/hall.ui', self)
+        path = os.path.abspath('../form/hall.ui')
+        uic.loadUi(path, self)
         self.setWindowTitle(title_window)
         self.title.setText(title)
         self.rows.setValue(rows)
@@ -106,7 +114,8 @@ class FormSession(QDialog):
     def __init__(self, title_window: str = '', title: str = '', date: str = '1.1.2000',
                  time: str = '0:0', duration: str = '0:0') -> None:
         super().__init__()
-        uic.loadUi('../form/session.ui', self)
+        path = os.path.abspath('../form/session.ui')
+        uic.loadUi(path, self)
         self.setWindowTitle(title_window)
         self.title.setText(title)
         self.date.setDate(datetime.date(*reversed(list(map(int, date.split('.'))))))
