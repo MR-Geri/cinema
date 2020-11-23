@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 from Code.MyMainWindow import MainWindow
 from Code.windows import WindowStart
-from settings import *
+from settings import path_icon
 
 StyleSheet = """
 TitleBar {

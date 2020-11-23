@@ -10,7 +10,7 @@ from Code.MyMainWindow import MainWindow
 from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormInfoText, FormSession
 from Code.data_base import get_data_base, get_base, Base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
-from settings import *
+from settings import path_icon, path_image_start
 
 
 class WindowStart(QWidget):
@@ -141,7 +141,7 @@ class Window(QWidget):
         self.grid_card.setContentsMargins(3, 3, 3, 3)
         #
         self.menubar = QMenuBar()
-        self.menubar.setMaximumHeight(31)
+        self.menubar.setMaximumHeight(32)
         #
         self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
@@ -229,7 +229,7 @@ class WindowCinemas(Window):
                 if count == 0:
                     base.execute("""
                     INSERT INTO Cinemas (id, title) VALUES ((SELECT id FROM Cinemas ORDER BY id DESC LIMIT 1) + 1, ?);
-                    """, (dialog.title.text(), ))
+                    """, (dialog.title.text(),))
                 else:
                     dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
                     dialog_.exec_()

@@ -4,10 +4,10 @@ import os
 
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QDialog
 from PyQt5.QtCore import Qt
 
-from settings import *
+from settings import path_accounts, path_icon, path_image_start
 
 
 class Login(QDialog):
