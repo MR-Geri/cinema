@@ -82,9 +82,7 @@ class WindowStart(QWidget):
                                                 places_row INTEGER not null
                                             );
                                     """)
-                    base.execute("""
-                                            create unique index Halls_id_uindex on Halls (id);
-                                    """)
+                    base.execute("""create unique index Halls_id_uindex on Halls (id);""")
                     base.execute("""
                                             create table Sessions
                                             (
@@ -166,7 +164,7 @@ class Window(QWidget):
         #
         self.update_()
 
-    def gen_card(self, id_: int, title: str) -> None:
+    def gen_card(self, id_: int, title: str) -> QWidget:
         card = self.card(self.user, title, *self.card_data(id_))
         card.button_browse.clicked.connect(lambda state, _id=id_: self.browse(_id))
         if self.user == 'Администратор':
