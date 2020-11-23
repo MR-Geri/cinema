@@ -115,4 +115,3 @@ class FormSession(QDialog):
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
         self.setLayout(self.gridLayout)
-
