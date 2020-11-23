@@ -55,22 +55,18 @@ class TitleBar(QWidget):
         font = QFont()
         font.setFamily('Webdings')
 
-        # Своя Кнопка
         self.buttonInfo = QPushButton(
             'i', self, clicked=self.showButtonInfo, font=font, objectName='buttonInfo')
         layout.addWidget(self.buttonInfo)
 
-        # Свернуть кнопку
         self.buttonMinimum = QPushButton(
             '0', self, clicked=self.windowMinimumed.emit, font=font, objectName='buttonMinimum')
         layout.addWidget(self.buttonMinimum)
 
-        # Кнопка Max
         self.buttonMaximum = QPushButton(
             '1', self, clicked=self.showMaximized, font=font, objectName='buttonMaximum')
         layout.addWidget(self.buttonMaximum)
 
-        # Кнопка закрытия
         self.buttonClose = QPushButton(
             'r', self, clicked=self.windowClosed.emit, font=font, objectName='buttonClose')
         layout.addWidget(self.buttonClose)
@@ -167,7 +163,6 @@ class MainWindow(QWidget):
         # Отслеживание мыши
         self.setMouseTracking(True)
 
-        # макет
         layout = QVBoxLayout(self, spacing=0)
         # Зарезервировать границы для изменения размера окна без полей
         layout.setContentsMargins(
@@ -176,7 +171,7 @@ class MainWindow(QWidget):
         self.titleBar = TitleBar(self)
         layout.addWidget(self.titleBar)
 
-        # слот сигнала
+        # сигналы
         self.titleBar.windowMinimumed.connect(self.showMinimized)
         self.titleBar.windowMaximumed.connect(self.showMaximized)
         self.titleBar.windowNormaled.connect(self.showNormal)
@@ -208,7 +203,7 @@ class MainWindow(QWidget):
 
     def move(self, pos: QtCore) -> None:
         if self.windowState() == Qt.WindowMaximized or self.windowState() == Qt.WindowFullScreen:
-            # Максимизировать или полноэкранный режим не допускается
+            # перемещать максимизированный или полноэкранный режим не допускается
             return
         super(MainWindow, self).move(pos)
 
@@ -266,36 +261,28 @@ class MainWindow(QWidget):
         if event.buttons() == Qt.LeftButton and self._pressed:
             self._resizeWidget(pos)
             return
-        if x_pos <= self.Margins and y_pos <= self.Margins:
-            # Верхний левый угол
+        if x_pos <= self.Margins and y_pos <= self.Margins:  # Верхний левый угол
             self.Direction = LeftTop
             self.setCursor(Qt.SizeFDiagCursor)
-        elif w_m <= x_pos <= self.width() and h_m <= y_pos <= self.height():
-            # Нижний правый угол
+        elif w_m <= x_pos <= self.width() and h_m <= y_pos <= self.height():  # Нижний правый угол
             self.Direction = RightBottom
             self.setCursor(Qt.SizeFDiagCursor)
-        elif w_m <= x_pos and y_pos <= self.Margins:
-            # верхний правый угол
+        elif w_m <= x_pos and y_pos <= self.Margins:  # верхний правый угол
             self.Direction = RightTop
             self.setCursor(Qt.SizeBDiagCursor)
-        elif x_pos <= self.Margins and h_m <= y_pos:
-            # Нижний левый угол
+        elif x_pos <= self.Margins and h_m <= y_pos:  # Нижний левый угол
             self.Direction = LeftBottom
             self.setCursor(Qt.SizeBDiagCursor)
-        elif 0 <= x_pos <= self.Margins <= y_pos <= h_m:
-            # Влево
+        elif 0 <= x_pos <= self.Margins <= y_pos <= h_m:  # Влево
             self.Direction = Left
             self.setCursor(Qt.SizeHorCursor)
-        elif w_m <= x_pos <= self.width() and self.Margins <= y_pos <= h_m:
-            # Право
+        elif w_m <= x_pos <= self.width() and self.Margins <= y_pos <= h_m:  # Право
             self.Direction = Right
             self.setCursor(Qt.SizeHorCursor)
-        elif w_m >= x_pos >= self.Margins >= y_pos >= 0:
-            # выше
+        elif w_m >= x_pos >= self.Margins >= y_pos >= 0:  # выше
             self.Direction = Top
             self.setCursor(Qt.SizeVerCursor)
-        elif self.Margins <= x_pos <= w_m and h_m <= y_pos <= self.height():
-            # ниже
+        elif self.Margins <= x_pos <= w_m and h_m <= y_pos <= self.height():  # ниже
             self.Direction = Bottom
             self.setCursor(Qt.SizeVerCursor)
 
