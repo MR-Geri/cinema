@@ -472,4 +472,5 @@ class WindowSession(Window):
                                  (row, place, self.session_id))
 
     def update_(self) -> None:
+        """ Эта функция должна быть пустая """
         pass
