@@ -247,14 +247,22 @@ class WindowCinemas(Window):
         dialog.deleteLater()
 
     def delete(self, id_: int) -> None:
-        with get_base(self.path_base_file, True) as base:
-            base.execute("""DELETE FROM Places WHERE session_id in 
-            (SELECT s.id FROM Halls h, Sessions s WHERE h.cinema_id = ?)""", (id_,))
-            base.execute("""DELETE FROM Sessions WHERE hall_id in 
-            (SELECT h.id FROM Halls h WHERE h.cinema_id = ?)""", (id_,))
-            base.execute("""DELETE FROM Halls WHERE cinema_id = ?""", (id_,))
-            base.execute("""DELETE FROM Cinemas WHERE id = ?""", (id_,))
-        self.update_()
+        valid = QMessageBox.question(
+                self, 'Удаление', "Действительно удалить элемент и всё что с ним связано?!",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            valid = QMessageBox.question(
+                self, 'Удаление ЛИ!?', "ВЫ УВЕРЕНЫ, ЧТО НУЖНО УДАЛИТЬ ЭЛЕМЕНТ?!!",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if valid == QMessageBox.Yes:
+                with get_base(self.path_base_file, True) as base:
+                    base.execute("""DELETE FROM Places WHERE session_id in 
+                    (SELECT s.id FROM Halls h, Sessions s WHERE h.cinema_id = ?)""", (id_,))
+                    base.execute("""DELETE FROM Sessions WHERE hall_id in 
+                    (SELECT h.id FROM Halls h WHERE h.cinema_id = ?)""", (id_,))
+                    base.execute("""DELETE FROM Halls WHERE cinema_id = ?""", (id_,))
+                    base.execute("""DELETE FROM Cinemas WHERE id = ?""", (id_,))
+                self.update_()
 
     def browse(self, id_: int) -> None:
         self.cinema = MainWindow()
@@ -338,12 +346,20 @@ class WindowCinema(Window):
         dialog.deleteLater()
 
     def delete(self, id_: int) -> None:
-        with get_base(self.path_base_file, True) as base:
-            base.execute("""DELETE FROM Places WHERE session_id in 
-            (SELECT s.id FROM Sessions s, Halls h WHERE s.hall_id = ?)""", (id_,))
-            base.execute("""DELETE FROM Sessions WHERE hall_id = ?""", (id_,))
-            base.execute("""DELETE FROM Halls WHERE id = ?""", (id_,))
-        self.update_()
+        valid = QMessageBox.question(
+                self, 'Удаление', "Действительно удалить элемент и всё что с ним связано?!",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            valid = QMessageBox.question(
+                self, 'Удаление ЛИ!?', "ВЫ УВЕРЕНЫ, ЧТО НУЖНО УДАЛИТЬ ЭЛЕМЕНТ?!!",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if valid == QMessageBox.Yes:
+                with get_base(self.path_base_file, True) as base:
+                    base.execute("""DELETE FROM Places WHERE session_id in 
+                    (SELECT s.id FROM Sessions s, Halls h WHERE s.hall_id = ?)""", (id_,))
+                    base.execute("""DELETE FROM Sessions WHERE hall_id = ?""", (id_,))
+                    base.execute("""DELETE FROM Halls WHERE id = ?""", (id_,))
+                self.update_()
 
     def browse(self, id_: int) -> None:
         self.hall = MainWindow()
@@ -431,10 +447,18 @@ class WindowHall(Window):
         dialog.deleteLater()
 
     def delete(self, id_: int) -> None:
-        with get_base(self.path_base_file, True) as base:
-            base.execute("""DELETE FROM Places WHERE session_id = ?""", (id_,))
-            base.execute("""DELETE FROM Sessions WHERE id = ?""", (id_,))
-        self.update_()
+        valid = QMessageBox.question(
+            self, 'Удаление', "Действительно удалить элемент и всё что с ним связано?!",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            valid = QMessageBox.question(
+                self, 'Удаление ЛИ!?', "ВЫ УВЕРЕНЫ, ЧТО НУЖНО УДАЛИТЬ ЭЛЕМЕНТ?!!",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if valid == QMessageBox.Yes:
+                with get_base(self.path_base_file, True) as base:
+                    base.execute("""DELETE FROM Places WHERE session_id = ?""", (id_,))
+                    base.execute("""DELETE FROM Sessions WHERE id = ?""", (id_,))
+                self.update_()
 
     def browse(self, id_: int) -> None:
         self.session = MainWindow()
