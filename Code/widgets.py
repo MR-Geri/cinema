@@ -179,10 +179,8 @@ class WidgetPlacement(QWidget):
         self.setLayout(self.verticalLayout)
 
     def click_free(self, button: QPushButton, row: int, place: int) -> None:
-        print(row, place)
         try:
             self.take_place.remove((row, place))
-            print('Освобождение', row, place)
             button.setStyleSheet(
                 '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
                 '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
@@ -192,10 +190,8 @@ class WidgetPlacement(QWidget):
             pass
 
     def click_occupy(self, button: QPushButton, row: int, place: int) -> None:
-        print(row, place)
         try:
             self.take_place.add((row, place))
-            print('Занятие', row, place)
             button.setStyleSheet(
                 '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
                 '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
