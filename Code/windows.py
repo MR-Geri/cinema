@@ -166,6 +166,7 @@ class Window(QWidget):
         card.button_browse.clicked.connect(lambda state, _id=id_: self.browse(_id))
         if self.user == 'Администратор':
             card.button_edit.clicked.connect(lambda state, _id=id_: self.edit(_id))
+            card.button_delete.clicked.connect(lambda state, _id=id_: self.delete(_id))
         return card
 
     def update_(self) -> None:
@@ -244,6 +245,16 @@ class WindowCinemas(Window):
                 base.execute("""UPDATE Cinemas SET title = ? WHERE id = ?""", (dialog.title.text(), id_))
             self.update_()
         dialog.deleteLater()
+
+    def delete(self, id_: int) -> None:
+        with get_base(self.path_base_file, True) as base:
+            base.execute("""DELETE FROM Places WHERE session_id in 
+            (SELECT s.id FROM Halls h, Sessions s WHERE h.cinema_id = ?)""", (id_,))
+            base.execute("""DELETE FROM Sessions WHERE hall_id in 
+            (SELECT h.id FROM Halls h WHERE h.cinema_id = ?)""", (id_,))
+            base.execute("""DELETE FROM Halls WHERE cinema_id = ?""", (id_,))
+            base.execute("""DELETE FROM Cinemas WHERE id = ?""", (id_,))
+        self.update_()
 
     def browse(self, id_: int) -> None:
         self.cinema = MainWindow()
@@ -325,6 +336,14 @@ class WindowCinema(Window):
                              (dialog.title.text(), dialog.rows.value(), dialog.places_row.value(), id_))
             self.update_()
         dialog.deleteLater()
+
+    def delete(self, id_: int) -> None:
+        with get_base(self.path_base_file, True) as base:
+            base.execute("""DELETE FROM Places WHERE session_id in 
+            (SELECT s.id FROM Sessions s, Halls h WHERE s.hall_id = ?)""", (id_,))
+            base.execute("""DELETE FROM Sessions WHERE hall_id = ?""", (id_,))
+            base.execute("""DELETE FROM Halls WHERE id = ?""", (id_,))
+        self.update_()
 
     def browse(self, id_: int) -> None:
         self.hall = MainWindow()
@@ -411,6 +430,12 @@ class WindowHall(Window):
             self.update_()
         dialog.deleteLater()
 
+    def delete(self, id_: int) -> None:
+        with get_base(self.path_base_file, True) as base:
+            base.execute("""DELETE FROM Places WHERE session_id = ?""", (id_,))
+            base.execute("""DELETE FROM Sessions WHERE id = ?""", (id_,))
+        self.update_()
+
     def browse(self, id_: int) -> None:
         self.session = MainWindow()
         self.session.setWindowTitle('Сеанс')
@@ -426,7 +451,6 @@ class WindowSession(Window):
         self.hall = hall
         self.session_id = session_id
         super().__init__(self.hall.start, self.hall.user)
-        layout = QGridLayout()
         d_row, d_places = map(int, get_data_base(self.path_base_file,
                                                  """SELECT rows, places_row FROM Halls WHERE  id = ?""",
                                                  (self.hall.hall_id,))[0])
@@ -434,6 +458,7 @@ class WindowSession(Window):
                                    "SELECT p.row, p.place FROM Places p WHERE p.session_id = ?",
                                    (self.session_id,))
         self.placement = WidgetPlacement(take_place, d_row, d_places)
+        layout = QGridLayout()
         layout.addWidget(self.placement)
         self.grid_card.addLayout(layout, 0, 0)
         self.label_user.hide()

@@ -30,8 +30,11 @@ class WidgetCinemasCard(QWidget):
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_delete = QPushButton('Удалить')
+            self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
             self.gridLayout.addWidget(self.button_edit, 5, 0)
-            self.gridLayout.addWidget(self.button_browse, 5, 1)
+            self.gridLayout.addWidget(self.button_delete, 5, 1)
+            self.gridLayout.addWidget(self.button_browse, 5, 2)
             #
         else:
             self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
@@ -74,12 +77,15 @@ class WidgetCinemaCard(QWidget):
         self.gridLayout.addWidget(self.label_sessions, 2, 0)
         self.gridLayout.addWidget(self.label_places, 3, 0)
         self.gridLayout.addWidget(self.label_places, 3, 0)
-        self.gridLayout.addWidget(self.sessions, 2, 1, 2, 1)
+        self.gridLayout.addWidget(self.sessions, 2, 1, 2, 2)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_delete = QPushButton('Удалить')
+            self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
             self.gridLayout.addWidget(self.button_edit, 4, 0)
-            self.gridLayout.addWidget(self.button_browse, 4, 1)
+            self.gridLayout.addWidget(self.button_delete, 4, 1)
+            self.gridLayout.addWidget(self.button_browse, 4, 2)
             #
         else:
             self.gridLayout.addWidget(self.button_browse, 4, 0, 1, 0)
@@ -113,8 +119,11 @@ class WidgetHallCard(QWidget):
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_delete = QPushButton('Удалить')
+            self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
             self.gridLayout.addWidget(self.button_edit, 5, 0)
-            self.gridLayout.addWidget(self.button_browse, 5, 1)
+            self.gridLayout.addWidget(self.button_delete, 5, 1)
+            self.gridLayout.addWidget(self.button_browse, 5, 2)
             #
         else:
             self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
