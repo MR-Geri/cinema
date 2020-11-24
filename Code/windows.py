@@ -100,9 +100,6 @@ class WindowStart(QWidget):
                     base.execute("""
                                             create table Places
                                             (
-                                                id         INTEGER not null
-                                                    primary key autoincrement
-                                                    unique,
                                                 row        INTEGER not null,
                                                 place      INTEGER not null,
                                                 session_id INTEGER
@@ -464,10 +461,15 @@ class WindowSession(Window):
                                             (self.session_id,)))
         deleted = take_place_base - self.placement.take_place
         added = self.placement.take_place - take_place_base
-        if deleted:
-            pass
-        if added:
-            pass
+        with get_base(self.path_base_file, True) as base:
+            if deleted:
+                for row, place in deleted:
+                    base.execute("""DELETE FROM Places WHERE row = ? AND place = ? AND session_id = ?""",
+                                 (row, place, self.session_id))
+            if added:
+                for row, place in added:
+                    base.execute("""INSERT INTO Places (row, place, session_id) VALUES (?, ?, ?)""",
+                                 (row, place, self.session_id))
 
     def update_(self) -> None:
         pass
