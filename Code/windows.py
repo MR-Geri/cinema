@@ -429,6 +429,16 @@ class WindowSession(Window):
         self.hall = hall
         self.session_id = session_id
         super().__init__(self.hall.start, self.hall.user)
+        layout = QGridLayout()
+        d_row, d_places = map(int, get_data_base(self.path_base_file,
+                                                 """SELECT rows, places_row FROM Halls WHERE  id = ?""",
+                                                 (self.hall.hall_id,))[0])
+        take_place = get_data_base(self.path_base_file,
+                                   "SELECT p.row, p.place FROM Places p WHERE p.session_id = ?",
+                                   (self.session_id,))
+        self.placement = WidgetPlacement(take_place, d_row, d_places)
+        layout.addWidget(self.placement)
+        self.grid_card.addLayout(layout, 0, 0)
         self.label_user.hide()
 
     def gen_bar(self) -> None:
@@ -444,17 +454,20 @@ class WindowSession(Window):
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.hall.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
+        action_reservation = QAction('Обновить', self)
+        action_reservation.triggered.connect(self.reservations)
+        self.menubar.addAction(action_reservation)
 
     def reservations(self) -> None:
-        pass
+        take_place_base = set(get_data_base(self.path_base_file,
+                                            "SELECT p.row, p.place FROM Places p WHERE p.session_id = ?",
+                                            (self.session_id,)))
+        deleted = take_place_base - self.placement.take_place
+        added = self.placement.take_place - take_place_base
+        if deleted:
+            pass
+        if added:
+            pass
 
     def update_(self) -> None:
-        layout = QGridLayout()
-        d_row, d_places = map(int, get_data_base(self.path_base_file,
-                                                 """SELECT rows, places_row FROM Halls WHERE  id = ?""",
-                                                 (self.hall.hall_id,))[0])
-        take_place = get_data_base(self.path_base_file,
-                                   "SELECT p.row, p.place FROM Places p WHERE p.session_id = ?",
-                                   (self.session_id,))
-        layout.addWidget(WidgetPlacement(take_place, d_row, d_places))
-        self.grid_card.addLayout(layout, 0, 0)
+        pass

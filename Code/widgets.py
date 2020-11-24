@@ -125,12 +125,12 @@ class WidgetHallCard(QWidget):
 class WidgetPlacement(QWidget):
     def __init__(self, take_place: list, d_row: int, d_places: int) -> None:
         super().__init__()
-        self.take_place = take_place
+        self.take_place = set(take_place)
         self.d_row = d_row
         self.d_places = d_places
-        self.update_()
+        self._update()
 
-    def update_(self) -> None:
+    def _update(self) -> None:
         self.verticalLayout = QVBoxLayout()
         screen = QLabel('Экран')
         screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
@@ -158,29 +158,39 @@ class WidgetPlacement(QWidget):
                         '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
                         '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
                     )
-                    button.clicked.connect(lambda s, b=button: self.click_free(b))
+                    button.clicked.connect(lambda s, b=button, r=row + 1, p=place + 1: self.click_free(b, r, p))
                 else:
                     button.setStyleSheet(
                         '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
                         '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
                     )
-                    button.clicked.connect(lambda s, b=button: self.click_occupy(b))
+                    button.clicked.connect(lambda s, b=button, r=row + 1, p=place + 1: self.click_occupy(b, r, p))
                 place_layout.addWidget(button)
             self.verticalLayout.addLayout(place_layout)
         self.setLayout(self.verticalLayout)
 
-    def click_free(self, button: QPushButton) -> None:
-        # Сделать форму подтверждения принятия (1) и форму отмены (2)
-        button.setStyleSheet(
-            '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
-            '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
-        )
-        button.clicked.connect(lambda s, b=button: self.click_occupy(b))
+    def click_free(self, button: QPushButton, row: int, place: int) -> None:
+        print(row, place)
+        try:
+            self.take_place.remove((row, place))
+            print('Освобождение', row, place)
+            button.setStyleSheet(
+                '#buttonPlace:hover {background-color: rgb(245, 245, 245);}'
+                '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
+            )
+            button.clicked.connect(lambda s, b=button, r=row, p=place: self.click_occupy(b, r, p))
+        except (ValueError, KeyError):
+            pass
 
-    def click_occupy(self, button: QPushButton) -> None:
-        # Сделать форму подтверждения принятия (1) и форму отмены (2)
-        button.setStyleSheet(
-            '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
-            '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
-        )
-        button.clicked.connect(lambda s, b=button: self.click_free(b))
+    def click_occupy(self, button: QPushButton, row: int, place: int) -> None:
+        print(row, place)
+        try:
+            self.take_place.add((row, place))
+            print('Занятие', row, place)
+            button.setStyleSheet(
+                '#buttonPlace:hover {background-color: rgb(255, 165, 0);}'
+                '#buttonPlace:!hover {background-color: rgb(31, 174, 233);}'
+            )
+            button.clicked.connect(lambda s, b=button, r=row, p=place: self.click_free(b, r, p))
+        except (ValueError, KeyError):
+            pass
