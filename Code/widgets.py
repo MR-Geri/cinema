@@ -7,7 +7,6 @@ class WidgetCinemasCard(QWidget):
     def __init__(self, user: str, title: str, quantity_halls: int,
                  quantity_sessions: int, quantity_places: int) -> None:
         super().__init__()
-        self.gridLayout = QGridLayout()
         #
         self.label_title = QLabel(title)
         self.label_halls = QLabel(f'Всего залов: {quantity_halls}')
@@ -23,6 +22,7 @@ class WidgetCinemasCard(QWidget):
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
         #
+        self.gridLayout = QGridLayout()
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
         self.gridLayout.addWidget(self.label_halls, 2, 0, 1, 0)
         self.gridLayout.addWidget(self.label_sessions, 3, 0, 1, 0)
@@ -45,7 +45,6 @@ class WidgetCinemasCard(QWidget):
 class WidgetCinemaCard(QWidget):
     def __init__(self, user: str, title: str, quantity_sessions: int, quantity_places: int, sessions: list) -> None:
         super().__init__()
-        self.gridLayout = QGridLayout()
         #
         self.label_title = QLabel(title)
         self.label_sessions = QLabel(f'Количество сеансов: {quantity_sessions}')
@@ -73,6 +72,7 @@ class WidgetCinemaCard(QWidget):
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
         #
+        self.gridLayout = QGridLayout()
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
         self.gridLayout.addWidget(self.label_sessions, 2, 0)
         self.gridLayout.addWidget(self.label_places, 3, 0)
@@ -143,23 +143,26 @@ class WidgetPlacement(QWidget):
         self._update()
 
     def _update(self) -> None:
-        self.verticalLayout = QVBoxLayout()
         screen = QLabel('Экран')
         screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         screen.setFont(QFont('MS Shell Dlg 2', 16))
         screen.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         screen.setStyleSheet('background: rgb(0, 0, 0); color: rgb(255, 255, 255);')
-        self.verticalLayout.addWidget(screen)
+        #
         indent = QLabel('')
         indent.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        #
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.addWidget(screen)
         self.verticalLayout.addWidget(indent)
+        #
         about = len(str(self.d_row))
         for row in range(self.d_row):
-            place_layout = QHBoxLayout()
-            #
             label = QLabel(f'{row + 1}{"  " * (about - len(str(row + 1)))}')
             label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
             label.setFont(QFont('PT Mono', 16))
+            #
+            place_layout = QHBoxLayout()
             place_layout.addWidget(label)
             for place in range(self.d_places):
                 button = QPushButton(str(place + 1), objectName='buttonPlace')
@@ -177,8 +180,10 @@ class WidgetPlacement(QWidget):
                         '#buttonPlace:!hover {background-color: rgb(225, 225, 225);}'
                     )
                     button.clicked.connect(lambda s, b=button, r=row + 1, p=place + 1: self.click_occupy(b, r, p))
+                #
                 place_layout.addWidget(button)
             self.verticalLayout.addLayout(place_layout)
+
         self.setLayout(self.verticalLayout)
 
     def click_free(self, button: QPushButton, row: int, place: int) -> None:

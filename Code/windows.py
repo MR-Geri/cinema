@@ -1,7 +1,6 @@
 import datetime
 import os
 import shutil
-from multiprocessing import Process
 from threading import Thread
 
 from PyQt5.QtGui import *
@@ -17,7 +16,7 @@ from settings import path_icon, path_image_start, time_restart_session
 
 
 class WindowStart(QWidget):
-    def __init__(self, window=None):
+    def __init__(self, window: MainWindow = None) -> None:
         super().__init__()
         self.path_base_file = None
         self.cinemas = None
@@ -48,7 +47,12 @@ class WindowStart(QWidget):
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
 
-    def cinemas_init(self, user):
+    def cinemas_init(self, user) -> None:
+        """
+        Инициализация окна с кинотеатрами
+        :param user: Права пользователя (кассир или администратор)
+        :return: Эта функция ничего не возвращает
+        """
         self.cinemas = MainWindow()
         self.cinemas.setWindowTitle('Кинотеатры')
         self.cinemas.setWindowIcon(QIcon(path_icon))
@@ -56,7 +60,11 @@ class WindowStart(QWidget):
         self.cinemas.show()
         self.window.hide()
 
-    def create_base(self):
+    def create_base(self) -> None:
+        """
+        Созадние базы данных и её использование
+        :return: Эта функция ничего не возвращает
+        """
         dialog = Login()
         if dialog.exec_() == QDialog.Accepted:
             date = datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S-%f")
@@ -118,7 +126,11 @@ class WindowStart(QWidget):
             os.remove(temp_base_path)
         dialog.deleteLater()
 
-    def load_base(self):
+    def load_base(self) -> None:
+        """
+        Загрузка базы данных и её использование
+        :return: Эта функция ничего не возвращает
+        """
         self.path_base_file = QFileDialog.getOpenFileName(
             self, caption='Выбрать базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0]
         if self.path_base_file:
@@ -166,6 +178,12 @@ class Window(QWidget):
         self.update_()
 
     def gen_card(self, id_: int, title: str) -> QWidget:
+        """
+        Генерация карточек с информацией
+        :param id_: номер объекта
+        :param title: название объекта
+        :return: Виджет со всеми карточками с информацией
+        """
         card = self.card(self.user, title, *self.card_data(id_))
         card.button_browse.clicked.connect(lambda state, _id=id_: self.browse(_id))
         if self.user == 'Администратор':
@@ -174,6 +192,10 @@ class Window(QWidget):
         return card
 
     def update_(self) -> None:
+        """
+        Обновление информации
+        :return: Эта функция ничего не возвращает
+        """
         self.cards = QListWidget()
         layout = QGridLayout()
         layout.addWidget(self.cards)
@@ -197,6 +219,10 @@ class WindowCinemas(Window):
         super().__init__(start, user)
 
     def gen_bar(self) -> None:
+        """
+        Генерация ToolBar`a
+        :return:  Эта функция ничего не возвращает
+        """
         if self.user == 'Администратор':
             action_new_cinema = QAction('Добавить кинотеатр', self)
             action_new_cinema.setShortcut('Ctrl+N')
@@ -204,6 +230,11 @@ class WindowCinemas(Window):
             self.menubar.addAction(action_new_cinema)
 
     def card_data(self, id_: int) -> tuple:
+        """
+        Информация о кинотеатре
+        :param id_: номер кинотеатра
+        :return: tuple(кол-во залов, кол-во сеансов, кол-во мест)
+        """
         quantity_halls = int(get_data_base(
             self.path_base_file,
             """SELECT COUNT(*) FROM Halls h WHERE h.cinema_id = ?""",
@@ -222,6 +253,11 @@ class WindowCinemas(Window):
         return quantity_halls, quantity_sessions, quantity_places
 
     def new_cinema(self) -> None:
+        """
+        Добавление в базу данных нового кинотеатра с проверкой на название
+        (Не может быть несколько кинотеатров с одинаковым названием)
+        :return: Эта функция ничего не возвращает
+        """
         dialog = FormCinema('Добавление кинотеатра')
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
@@ -240,6 +276,11 @@ class WindowCinemas(Window):
         dialog.deleteLater()
 
     def edit(self, id_: int) -> None:
+        """
+        Изменение кинотеатра
+        :param id_: номер изменяемого объекта
+        :return: Эта функция ничего не возвращает
+        """
         dialog = FormCinema('Изменение кинотеатра',
                             get_data_base(self.path_base_file,
                                           """SELECT title FROM Cinemas WHERE id = ?""",
@@ -251,6 +292,11 @@ class WindowCinemas(Window):
         dialog.deleteLater()
 
     def delete(self, id_: int) -> None:
+        """
+        Каскадное удаление из базы данных.
+        :param id_: номер удаляемого объекта
+        :return: Эта функция ничего не возвращает
+        """
         valid = QMessageBox.question(
                 self, 'Удаление', "Действительно удалить элемент и всё что с ним связано?!",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -269,6 +315,11 @@ class WindowCinemas(Window):
                 self.update_()
 
     def browse(self, id_: int) -> None:
+        """
+        Подробная информация о кинотеатре
+        :param id_: номер просматриваемого кинотеатра
+        :return: Эта функция ничего не возвращает
+        """
         self.cinema = MainWindow()
         self.cinema.setWindowTitle('Кинотеатр')
         self.cinema.setWindowIcon(QIcon(path_icon))
@@ -290,17 +341,27 @@ class WindowCinema(Window):
         super().__init__(self.cinemas.start, self.cinemas.user)
 
     def gen_bar(self) -> None:
+        """
+        Генерация ToolBar`a
+        :return:  Эта функция ничего не возвращает
+        """
         if self.user == 'Администратор':
             action_new_hall = QAction('Добавить зал', self)
             action_new_hall.setShortcut('Ctrl+N')
             action_new_hall.triggered.connect(self.new_hall)
             self.menubar.addAction(action_new_hall)
+        #
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
 
     def card_data(self, id_: int) -> tuple:
+        """
+        Информация о зале
+        :param id_: номер зала
+        :return: tuple(кол-во идущих сеансов, кол-во мест во всем зале, список сеансов)
+        """
         sessions = [i[0] for i in get_data_base(
             self.path_base_file,
             """SELECT title FROM Sessions s WHERE s.hall_id = ?""",
@@ -315,6 +376,11 @@ class WindowCinema(Window):
         return quantity_sessions, quantity_places, sessions
 
     def new_hall(self) -> None:
+        """
+        Добавление в базу данных нового зала с проверкой на название
+        (Не может быть несколько залов с одинаковым названием)
+        :return: Эта функция ничего не возвращает
+        """
         dialog = FormHall('Добавление зала')
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
@@ -338,6 +404,11 @@ class WindowCinema(Window):
         dialog.deleteLater()
 
     def edit(self, id_: int) -> None:
+        """
+        Изменение зала
+        :param id_: номер изменяемого объекта
+        :return: Эта функция ничего не возвращает
+        """
         dialog = FormHall('Изменение зала',
                           *get_data_base(self.path_base_file,
                                          """SELECT title, rows, places_row FROM Halls WHERE id = ?""",
@@ -350,6 +421,11 @@ class WindowCinema(Window):
         dialog.deleteLater()
 
     def delete(self, id_: int) -> None:
+        """
+        Каскадное удаление из базы данных.
+        :param id_: номер удаляемого объекта
+        :return: Эта функция ничего не возвращает
+        """
         valid = QMessageBox.question(
                 self, 'Удаление', "Действительно удалить элемент и всё что с ним связано?!",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -366,6 +442,11 @@ class WindowCinema(Window):
                 self.update_()
 
     def browse(self, id_: int) -> None:
+        """
+        Подробная информация о зале
+        :param id_: номер просматриваемого зала
+        :return: Эта функция ничего не возвращает
+        """
         self.hall = MainWindow()
         self.hall.setWindowTitle('Зал')
         self.hall.setWindowIcon(QIcon(path_icon))
@@ -387,21 +468,32 @@ class WindowHall(Window):
         super().__init__(self.cinema.start, self.cinema.user)
 
     def gen_bar(self) -> None:
+        """
+        Генерация ToolBar`a
+        :return:  Эта функция ничего не возвращает
+        """
         if self.user == 'Администратор':
             action_new_hall = QAction('Добавить сеанс', self)
             action_new_hall.setShortcut('Ctrl+N')
             action_new_hall.triggered.connect(self.new_session)
             self.menubar.addAction(action_new_hall)
+        #
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.window.close)
         action_cinema.triggered.connect(self.cinema.window.show)
         self.ActMenu.addAction(action_cinema)
+        #
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
 
     def card_data(self, id_: int) -> tuple:
+        """
+        Информация о сеансе
+        :param id_: номер сеанса
+        :return: tuple(дата, время, продолжительность, цена)
+        """
         date, time, duration, price = get_data_base(
             self.cinema.start.path_base_file,
             """SELECT date, time, duration, price FROM Sessions WHERE id = ?""",
@@ -410,6 +502,13 @@ class WindowHall(Window):
         return date, time, duration, price
 
     def new_session(self) -> None:
+        """
+        Добавление в базу данных нового сеанса с проверкой на валидность времени
+        (Сеансы в одном зале не могут идти одновременно)
+        В настройках указано время на уборку зала. Это время тоже учитывается.
+        По умолчанию 30 минут.
+        :return: Эта функция ничего не возвращает
+        """
         dialog = FormSession('Добавление сеанса')
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
@@ -452,6 +551,11 @@ class WindowHall(Window):
         dialog.deleteLater()
 
     def edit(self, id_: int) -> None:
+        """
+        Изменение сессии
+        :param id_: номер изменяемого объекта
+        :return: Эта функция ничего не возвращает
+        """
         dialog = FormSession('Изменение зала',
                              *get_data_base(self.path_base_file,
                                             """SELECT title, date, time, duration FROM Sessions WHERE id = ?""",
@@ -470,6 +574,11 @@ class WindowHall(Window):
         dialog.deleteLater()
 
     def delete(self, id_: int) -> None:
+        """
+        Каскадное удаление из базы данных.
+        :param id_: номер удаляемого объекта
+        :return: Эта функция ничего не возвращает
+        """
         valid = QMessageBox.question(
             self, 'Удаление', "Действительно удалить элемент и всё что с ним связано?!",
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -484,6 +593,11 @@ class WindowHall(Window):
                 self.update_()
 
     def browse(self, id_: int) -> None:
+        """
+        Подробная информация о сеансе
+        :param id_: номер просматриваемого сеанса
+        :return: Эта функция ничего не возвращает
+        """
         self.session = MainWindow()
         self.session.setWindowTitle('Сеанс')
         self.session.setWindowIcon(QIcon(path_icon))
@@ -498,7 +612,7 @@ class WindowSession(Window):
         self.hall = hall
         self.session_id = session_id
         super().__init__(self.hall.start, self.hall.user)
-        #
+        #  Информация о сессии
         self.price = get_data_base(self.path_base_file,
                                    """SELECT price FROM Sessions WHERE id = ?""",
                                    (self.session_id,))[0][0]
@@ -524,23 +638,36 @@ class WindowSession(Window):
         self.label_user.hide()
 
     def gen_bar(self) -> None:
+        """
+        Генерация ToolBar`a
+        :return:  Эта функция ничего не возвращает
+        """
         action_hall = QAction('Зал', self)
         action_hall.triggered.connect(self.window.close)
         action_hall.triggered.connect(self.hall.window.show)
         self.ActMenu.addAction(action_hall)
+        #
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.window.close)
         action_cinema.triggered.connect(self.hall.cinema.window.show)
         self.ActMenu.addAction(action_cinema)
+        #
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.hall.cinema.cinemas.window.show)
         self.ActMenu.addAction(action_cinemas)
+        #
         action_reservation = QAction('Обновить', self)
         action_reservation.triggered.connect(self.reservations)
         self.menubar.addAction(action_reservation)
 
     def reservations(self) -> None:
+        """
+        Покупка и печать билетов.
+        Отмена забронированного места.
+
+        :return: Эта функция ничего не возвращает
+        """
         take_place_base = set(get_data_base(self.path_base_file,
                                             "SELECT p.row, p.place FROM Places p WHERE p.session_id = ?",
                                             (self.session_id,)))

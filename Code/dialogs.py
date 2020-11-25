@@ -16,10 +16,11 @@ class Login(QDialog):
         path = os.path.abspath('../form/login.ui')
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
+        #
         self.button_sign_in.clicked.connect(self.sign_in)
         self.line_login.textChanged.connect(self.update_line)
         self.line_password.textChanged.connect(self.update_line)
-
+        #
         self.button_sign_in.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                           'QPushButton:hover {background-color: rgb(200, 200, 200);}')
 
@@ -41,12 +42,14 @@ class FormLogin(QDialog):
         path = os.path.abspath('../form/form_login.ui')
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
+        #
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
         self.button_cashier.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                           'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         self.button_admin.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                         'QPushButton:hover {background-color: rgb(200, 200, 200);}')
+        #
         self.user = None
 
     def cashier(self) -> None:
@@ -65,11 +68,14 @@ class FormInfo(QDialog):
     def __init__(self) -> None:
         super().__init__()
         path = os.path.abspath('../form/form_info.ui')
-        uic.loadUi(path, self)
-        pix_map = QPixmap(path_image_start)
         self.setWindowIcon(QIcon(path_icon))
+        uic.loadUi(path, self)
+        #
+        pix_map = QPixmap(path_image_start)
+
         self.image.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         self.image.setPixmap(pix_map.scaled(365, 400))
+        #
         self.setLayout(self.gridLayout)
 
 
@@ -79,8 +85,10 @@ class FormInfoText(QDialog):
         path = os.path.abspath('../form/form_info.ui')
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
+        #
         self.image.hide()
         self.label.setText(text)
+        #
         self.setLayout(self.gridLayout)
 
 
@@ -89,8 +97,11 @@ class FormCinema(QDialog):
         super().__init__()
         path = os.path.abspath('../form/cinema.ui')
         uic.loadUi(path, self)
+        self.setWindowIcon(QIcon(path_icon))
         self.setWindowTitle(title_window)
+        #
         self.title.setText(title)
+        #
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
         self.setLayout(self.gridLayout)
@@ -101,12 +112,16 @@ class FormHall(QDialog):
         super().__init__()
         path = os.path.abspath('../form/hall.ui')
         uic.loadUi(path, self)
+        self.setWindowIcon(QIcon(path_icon))
         self.setWindowTitle(title_window)
+        #
         self.title.setText(title)
         self.rows.setValue(rows)
         self.places_row.setValue(places_row)
+        #
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
+        #
         self.setLayout(self.gridLayout)
 
 
@@ -116,12 +131,16 @@ class FormSession(QDialog):
         super().__init__()
         path = os.path.abspath('../form/session.ui')
         uic.loadUi(path, self)
+        self.setWindowIcon(QIcon(path_icon))
         self.setWindowTitle(title_window)
+        #
         self.title.setText(title)
         self.date.setDate(datetime.date(*reversed(list(map(int, date.split('.'))))))
         self.time.setTime(datetime.time(*map(int, time.split(':'))))
         self.duration.setTime(datetime.time(*map(int, duration.split(':'))))
         self.price.setValue(price)
+        #
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
+        #
         self.setLayout(self.gridLayout)
