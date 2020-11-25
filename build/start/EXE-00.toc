@@ -40,7 +40,7 @@
  [],
  False,
  False,
- 1606137869,
+ 1606326250,
  [('run.exe',
    'd:\\pycharmprojects\\cinema\\venv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\run.exe',
    'EXECUTABLE')])

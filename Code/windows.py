@@ -2,6 +2,7 @@ import datetime
 import os
 import shutil
 from multiprocessing import Process
+from threading import Thread
 
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -554,7 +555,7 @@ class WindowSession(Window):
                 for row, place in added:
                     base.execute("""INSERT INTO Places (row, place, session_id) VALUES (?, ?, ?)""",
                                  (row, place, self.session_id))
-                    th = Process(target=ticket, args=(row, place, self.title_hall, self.price, self.date))
+                    th = Thread(target=ticket, args=(row, place, self.title_hall, self.price, self.date))
                     th.start()
 
     def update_(self) -> None:
