@@ -10,7 +10,7 @@ from Code.MyMainWindow import MainWindow
 from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormInfoText, FormSession
 from Code.data_base import get_data_base, get_base, Base
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
-from settings import path_icon, path_image_start
+from settings import path_icon, path_image_start, time_restart_session
 
 
 class WindowStart(QWidget):
@@ -412,34 +412,32 @@ class WindowHall(Window):
                 date_inp = dialog.date.dateTime().toString('dd.MM.yyyy')
                 time_inp = dialog.time.dateTime().toString('HH:mm')
                 duration_inp = dialog.duration.dateTime().toString('HH:mm')
-                inp_datetime = datetime.datetime(
+                #
+                inp_start = datetime.datetime(
                     *reversed(list(map(int, date_inp.split('.')))), *list(map(int, time_inp.split(':')))
                 )
-                inp_duration = datetime.time(*list(map(int, duration_inp.split(':'))))
+                # Время сеанса с учётом уборки в зале
+                h, m = map(int, duration_inp.split(':'))
+                inp_finish = inp_start + datetime.timedelta(hours=h, minutes=m + time_restart_session)
+                #
                 list_time = get_data_base(self.path_base_file,
                                           f"""SELECT date, time, duration FROM Sessions WHERE hall_id = ?""",
                                           (self.hall_id,))
                 for date, time, duration in list_time:
-                    for_datetime = datetime.datetime(
+                    h, m = map(int, duration.split(':'))
+                    start = datetime.datetime(
                         *reversed(list(map(int, date.split('.')))), *list(map(int, time.split(':')))
                     )
-                    print(for_datetime)
-                # return
-                count = 0  # Нужна проверка на пересечение времени
-                if count == 0:
-                    base.execute("""
-                                    INSERT INTO Sessions (id, title, hall_id, date, time, duration)
-                                    VALUES ((SELECT id FROM Sessions ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?, ?);
-                                    """,
-                                 (dialog.title.text(),
-                                  self.hall_id,
-                                  date_inp,
-                                  time_inp,
-                                  duration_inp))
-                else:
-                    dialog_ = FormInfoText(f'Сеанс с таким названием уже есть.')
-                    dialog_.exec_()
-                    self.new_hall()
+                    finish = start + datetime.timedelta(hours=h, minutes=m)
+                    if start <= inp_start <= finish or start <= inp_finish <= finish:
+                        dialog_ = FormInfoText(f'Сеанс пересекается с другим сеансом.')
+                        dialog_.exec_()
+                        self.new_session()
+                        return
+                base.execute("""
+                                INSERT INTO Sessions (id, title, hall_id, date, time, duration)
+                                VALUES ((SELECT id FROM Sessions ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?, ?);
+                                """, (dialog.title.text(), self.hall_id, date_inp, time_inp, duration_inp))
             self.update_()
         dialog.deleteLater()
 
