@@ -112,7 +112,7 @@ class FormHall(QDialog):
 
 class FormSession(QDialog):
     def __init__(self, title_window: str = '', title: str = '', date: str = '1.1.2000',
-                 time: str = '0:0', duration: str = '0:0') -> None:
+                 time: str = '0:0', duration: str = '0:0', price: int = 250) -> None:
         super().__init__()
         path = os.path.abspath('../form/session.ui')
         uic.loadUi(path, self)
@@ -121,6 +121,7 @@ class FormSession(QDialog):
         self.date.setDate(datetime.date(*reversed(list(map(int, date.split('.'))))))
         self.time.setTime(datetime.time(*map(int, time.split(':'))))
         self.duration.setTime(datetime.time(*map(int, duration.split(':'))))
+        self.price.setValue(price)
         self.button_save.clicked.connect(self.accept)
         self.button_cancel.clicked.connect(self.close)
         self.setLayout(self.gridLayout)

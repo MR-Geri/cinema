@@ -9,8 +9,9 @@ from PyQt5.QtCore import Qt
 from Code.MyMainWindow import MainWindow
 from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormInfoText, FormSession
 from Code.data_base import get_data_base, get_base, Base
+from Code.image import ticket
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
-from settings import path_icon, path_image_start, time_restart_session
+from settings import path_icon, path_image_start, time_restart_session, path_temp
 
 
 class WindowStart(QWidget):
@@ -61,50 +62,51 @@ class WindowStart(QWidget):
             with open(temp_base_path, mode='w') as _:
                 with get_base(temp_base_path, True) as base:
                     base.execute("""
-                                            create table Cinemas
-                                            (
-                                                id    INTEGER not null
-                                                    primary key autoincrement
-                                                    unique,
-                                                title STRING  not null
-                                            );
+                                    create table Cinemas
+                                    (
+                                        id    INTEGER not null
+                                            primary key autoincrement
+                                            unique,
+                                        title STRING  not null
+                                    );
                                     """)
                     base.execute("""
-                                            create table Halls
-                                            (
-                                                id         INTEGER not null
-                                                    constraint Halls_pk
-                                                        primary key autoincrement,
-                                                title      STRING  not null,
-                                                cinema_id  INTEGER not null
-                                                    references Cinemas,
-                                                rows       INTEGER not null,
-                                                places_row INTEGER not null
-                                            );
+                                    create table Halls
+                                    (
+                                        id         INTEGER not null
+                                            constraint Halls_pk
+                                                primary key autoincrement,
+                                        title      STRING  not null,
+                                        cinema_id  INTEGER not null
+                                            references Cinemas,
+                                        rows       INTEGER not null,
+                                        places_row INTEGER not null
+                                    );
                                     """)
                     base.execute("""create unique index Halls_id_uindex on Halls (id);""")
                     base.execute("""
-                                            create table Sessions
-                                            (
-                                                id       INTEGER not null
-                                                    primary key autoincrement
-                                                    unique,
-                                                title    STRING  not null,
-                                                hall_id  INTEGER not null
-                                                    references Halls,
-                                                date     TEXT    not null,
-                                                time     TEXT    not null,
-                                                duration TEXT    not null
-                                            );
+                                    create table Sessions
+                                    (
+                                        id       INTEGER not null
+                                            primary key autoincrement
+                                            unique,
+                                        title    STRING  not null,
+                                        hall_id  INTEGER not null
+                                            references Halls,
+                                        date     TEXT    not null,
+                                        time     TEXT    not null,
+                                        duration TEXT    not null,
+                                        price    INTEGER default 0 not null
+                                    );
                                     """)
                     base.execute("""
-                                            create table Places
-                                            (
-                                                row        INTEGER not null,
-                                                place      INTEGER not null,
-                                                session_id INTEGER
-                                                    references Sessions
-                                            );
+                                    create table Places
+                                    (
+                                        row        INTEGER not null,
+                                        place      INTEGER not null,
+                                        session_id INTEGER
+                                            references Sessions
+                                    );
                                     """)
             self.path_base_file = os.path.abspath(QFileDialog.getSaveFileName(
                 self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
@@ -398,12 +400,12 @@ class WindowHall(Window):
         self.ActMenu.addAction(action_cinemas)
 
     def card_data(self, id_: int) -> tuple:
-        date, time, duration = get_data_base(
+        date, time, duration, price = get_data_base(
             self.cinema.start.path_base_file,
-            """SELECT date, time, duration FROM Sessions WHERE id = ?""",
+            """SELECT date, time, duration, price FROM Sessions WHERE id = ?""",
             (id_,)
         )[0]
-        return date, time, duration
+        return date, time, duration, price
 
     def new_session(self) -> None:
         dialog = FormSession('Добавление сеанса')
@@ -435,9 +437,15 @@ class WindowHall(Window):
                         self.new_session()
                         return
                 base.execute("""
-                                INSERT INTO Sessions (id, title, hall_id, date, time, duration)
-                                VALUES ((SELECT id FROM Sessions ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?, ?);
-                                """, (dialog.title.text(), self.hall_id, date_inp, time_inp, duration_inp))
+                                INSERT INTO Sessions (id, title, hall_id, date, time, duration, price)
+                                VALUES ((SELECT id FROM Sessions ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?, ?, ?);
+                                """,
+                             (dialog.title.text(),
+                              self.hall_id,
+                              date_inp,
+                              time_inp,
+                              duration_inp,
+                              dialog.price.value()))
             self.update_()
         dialog.deleteLater()
 
@@ -448,11 +456,13 @@ class WindowHall(Window):
                                             (id_,))[0])
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
-                base.execute("""UPDATE Sessions SET title = ?, date = ?, time = ?, duration = ? WHERE id = ?""",
+                base.execute("""
+                UPDATE Sessions SET title = ?, date = ?, time = ?, duration = ?, price = ? WHERE id = ?""",
                              (dialog.title.text(),
                               dialog.date.dateTime().toString('dd.MM.yyyy'),
                               dialog.time.dateTime().toString('HH:mm'),
                               dialog.duration.dateTime().toString('HH:mm'),
+                              dialog.price.value(),
                               id_))
             self.update_()
         dialog.deleteLater()
@@ -486,6 +496,19 @@ class WindowSession(Window):
         self.hall = hall
         self.session_id = session_id
         super().__init__(self.hall.start, self.hall.user)
+        #
+        self.price = get_data_base(self.path_base_file,
+                                   """SELECT price FROM Sessions WHERE id = ?""",
+                                   (self.session_id,))[0][0]
+        self.title_hall = get_data_base(
+            self.path_base_file,
+            """SELECT h.title FROM Halls h, Sessions s WHERE h.id = s.hall_id AND s.id = ?""",
+            (self.session_id,))[0][0]
+        self.date, self.time = get_data_base(
+            self.path_base_file,
+            """SELECT date, time FROM Sessions WHERE id = ?""",
+            (self.session_id,))[0]
+        #
         d_row, d_places = map(int, get_data_base(self.path_base_file,
                                                  """SELECT rows, places_row FROM Halls WHERE  id = ?""",
                                                  (self.hall.hall_id,))[0])
@@ -530,6 +553,7 @@ class WindowSession(Window):
                 for row, place in added:
                     base.execute("""INSERT INTO Places (row, place, session_id) VALUES (?, ?, ?)""",
                                  (row, place, self.session_id))
+                    ticket(path_temp, row, place, self.title_hall, self.price, self.date, self.time)
 
     def update_(self) -> None:
         """ Эта функция должна быть пустая """

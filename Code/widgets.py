@@ -94,7 +94,7 @@ class WidgetCinemaCard(QWidget):
 
 
 class WidgetHallCard(QWidget):
-    def __init__(self, user: str, title: str, date: str, time: str, duration: str) -> None:
+    def __init__(self, user: str, title: str, date: str, time: str, duration: str, price: str) -> None:
         super().__init__()
         self.gridLayout = QGridLayout()
         #
@@ -102,12 +102,14 @@ class WidgetHallCard(QWidget):
         self.label_date = QLabel(f'Дата: {date}')
         self.label_time = QLabel(f'Время начала: {time}')
         self.label_duration = QLabel(f'Продолжительность: {duration}')
+        self.label_price = QLabel(f'Цена билета: {price}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
         self.label_title.setFont(QFont('MS Shell Dlg 2', 16))
         self.label_date.setFont(QFont('MS Shell Dlg 2', 16))
         self.label_time.setFont(QFont('MS Shell Dlg 2', 16))
         self.label_duration.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_price.setFont(QFont('MS Shell Dlg 2', 16))
         #
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
@@ -116,17 +118,18 @@ class WidgetHallCard(QWidget):
         self.gridLayout.addWidget(self.label_date, 2, 0, 1, 0)
         self.gridLayout.addWidget(self.label_time, 3, 0, 1, 0)
         self.gridLayout.addWidget(self.label_duration, 4, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_price, 5, 0, 1, 0)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
             self.button_delete = QPushButton('Удалить')
             self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
-            self.gridLayout.addWidget(self.button_edit, 5, 0)
-            self.gridLayout.addWidget(self.button_delete, 5, 1)
-            self.gridLayout.addWidget(self.button_browse, 5, 2)
+            self.gridLayout.addWidget(self.button_edit, 6, 0)
+            self.gridLayout.addWidget(self.button_delete, 6, 1)
+            self.gridLayout.addWidget(self.button_browse, 6, 2)
             #
         else:
-            self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
+            self.gridLayout.addWidget(self.button_browse, 6, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
 
