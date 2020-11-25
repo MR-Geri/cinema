@@ -11,7 +11,7 @@ from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormInfoText, F
 from Code.data_base import get_data_base, get_base, Base
 from Code.image import ticket
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
-from settings import path_icon, path_image_start, time_restart_session, path_temp
+from settings import path_icon, path_image_start, time_restart_session
 
 
 class WindowStart(QWidget):
@@ -553,7 +553,7 @@ class WindowSession(Window):
                 for row, place in added:
                     base.execute("""INSERT INTO Places (row, place, session_id) VALUES (?, ?, ?)""",
                                  (row, place, self.session_id))
-                    ticket(path_temp, row, place, self.title_hall, self.price, self.date, self.time)
+                    ticket(row, place, self.title_hall, self.price, self.date, self.time)
 
     def update_(self) -> None:
         """ Эта функция должна быть пустая """

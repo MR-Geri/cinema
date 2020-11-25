@@ -237,10 +237,10 @@
        <set>Qt::AlignCenter</set>
       </property>
       <property name="minimum">
-       <number>50</number>
+       <number>100</number>
       </property>
       <property name="maximum">
-       <number>3000</number>
+       <number>999</number>
       </property>
       <property name="value">
        <number>250</number>
