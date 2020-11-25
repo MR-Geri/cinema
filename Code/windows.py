@@ -1,6 +1,7 @@
 import datetime
 import os
 import shutil
+from multiprocessing import Process
 
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -504,10 +505,10 @@ class WindowSession(Window):
             self.path_base_file,
             """SELECT h.title FROM Halls h, Sessions s WHERE h.id = s.hall_id AND s.id = ?""",
             (self.session_id,))[0][0]
-        self.date, self.time = get_data_base(
+        self.date = get_data_base(
             self.path_base_file,
-            """SELECT date, time FROM Sessions WHERE id = ?""",
-            (self.session_id,))[0]
+            """SELECT date FROM Sessions WHERE id = ?""",
+            (self.session_id,))[0][0]
         #
         d_row, d_places = map(int, get_data_base(self.path_base_file,
                                                  """SELECT rows, places_row FROM Halls WHERE  id = ?""",
@@ -553,7 +554,8 @@ class WindowSession(Window):
                 for row, place in added:
                     base.execute("""INSERT INTO Places (row, place, session_id) VALUES (?, ?, ?)""",
                                  (row, place, self.session_id))
-                    ticket(row, place, self.title_hall, self.price, self.date, self.time)
+                    th = Process(target=ticket, args=(row, place, self.title_hall, self.price, self.date))
+                    th.start()
 
     def update_(self) -> None:
         """ Эта функция должна быть пустая """

@@ -11,7 +11,7 @@ font_70 = ImageFont.truetype(path_font, size=70)
 font_100 = ImageFont.truetype(path_font, size=100)
 
 
-def ticket(row: int, place: int, hall: str, price: int, date: str, time: str) -> None:
+def ticket(row: int, place: int, hall: str, price: int, date: str) -> None:
     im = image.copy()
     text = ImageDraw.Draw(im)
     date = datetime.datetime(*reversed(list(map(int, date.split('.'))))).strftime('%d %B %Y')
@@ -44,4 +44,4 @@ def ticket(row: int, place: int, hall: str, price: int, date: str, time: str) ->
             font=font_70,
             fill='#0B0B0B'
         )
-    im.show()
+    im.save(f'{path_temp}/{row}_{place}_{hall}_{price}_{date}.jpg')
