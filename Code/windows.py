@@ -53,6 +53,7 @@ class WindowStart(QWidget):
     def _init_cinemas(self, user: str = 'Пользователь') -> None:
         """
         Инициализация окна с кинотеатрами
+
         :param user: Права пользователя (кассир или администратор)
         :return: Эта функция ничего не возвращает
         """
@@ -116,6 +117,7 @@ class WindowStart(QWidget):
     def create_base(self) -> None:
         """
         Созадние базы данных и её использование
+
         :return: Эта функция ничего не возвращает
         """
         dialog = Login()
@@ -136,6 +138,7 @@ class WindowStart(QWidget):
     def load_base(self) -> None:
         """
         Загрузка базы данных и её использование
+
         :return: Эта функция ничего не возвращает
         """
         self.path_base_file = QFileDialog.getOpenFileName(
@@ -190,6 +193,7 @@ class Window(QWidget):
     def gen_card(self, id_: int, title: str) -> QWidget:
         """
         Генерация карточек с информацией
+
         :param id_: номер объекта
         :param title: название объекта
         :return: Виджет со всеми карточками с информацией
@@ -204,6 +208,7 @@ class Window(QWidget):
     def update_(self) -> None:
         """
         Обновление информации
+
         :return: Эта функция ничего не возвращает
         """
         self.cards = QListWidget()
@@ -213,10 +218,10 @@ class Window(QWidget):
             #
             card = self.gen_card(id_, title)
             #
-            q_list_card = QListWidgetItem(self.cards)
-            q_list_card.setSizeHint(card.sizeHint())
-            self.cards.addItem(q_list_card)
-            self.cards.setItemWidget(q_list_card, card)
+            list_card = QListWidgetItem(self.cards)
+            list_card.setSizeHint(card.sizeHint())
+            self.cards.addItem(list_card)
+            self.cards.setItemWidget(list_card, card)
         self.grid_card.addLayout(layout, 0, 0)
 
 
@@ -231,6 +236,7 @@ class WindowCinemas(Window):
     def gen_bar(self) -> None:
         """
         Генерация ToolBar`a
+
         :return:  Эта функция ничего не возвращает
         """
         if self.user == 'Администратор':
@@ -242,6 +248,7 @@ class WindowCinemas(Window):
     def card_data(self, id_: int) -> tuple:
         """
         Информация о кинотеатре
+
         :param id_: номер кинотеатра
         :return: tuple(кол-во залов, кол-во сеансов, кол-во мест)
         """
@@ -266,6 +273,7 @@ class WindowCinemas(Window):
         """
         Добавление в базу данных нового кинотеатра с проверкой на название
         (Не может быть несколько кинотеатров с одинаковым названием)
+
         :return: Эта функция ничего не возвращает
         """
         dialog = FormCinema('Добавление кинотеатра')
@@ -288,6 +296,7 @@ class WindowCinemas(Window):
     def edit(self, id_: int) -> None:
         """
         Изменение кинотеатра
+
         :param id_: номер изменяемого объекта
         :return: Эта функция ничего не возвращает
         """
@@ -304,6 +313,7 @@ class WindowCinemas(Window):
     def delete(self, id_: int) -> None:
         """
         Каскадное удаление из базы данных.
+
         :param id_: номер удаляемого объекта
         :return: Эта функция ничего не возвращает
         """
@@ -327,6 +337,7 @@ class WindowCinemas(Window):
     def browse(self, id_: int) -> None:
         """
         Подробная информация о кинотеатре
+
         :param id_: номер просматриваемого кинотеатра
         :return: Эта функция ничего не возвращает
         """
@@ -353,6 +364,7 @@ class WindowCinema(Window):
     def gen_bar(self) -> None:
         """
         Генерация ToolBar`a
+
         :return:  Эта функция ничего не возвращает
         """
         if self.user == 'Администратор':
@@ -369,6 +381,7 @@ class WindowCinema(Window):
     def card_data(self, id_: int) -> tuple:
         """
         Информация о зале
+
         :param id_: номер зала
         :return: tuple(кол-во идущих сеансов, кол-во мест во всем зале, список сеансов)
         """
@@ -389,6 +402,7 @@ class WindowCinema(Window):
         """
         Добавление в базу данных нового зала с проверкой на название
         (Не может быть несколько залов с одинаковым названием)
+
         :return: Эта функция ничего не возвращает
         """
         dialog = FormHall('Добавление зала')
@@ -416,6 +430,7 @@ class WindowCinema(Window):
     def edit(self, id_: int) -> None:
         """
         Изменение зала
+
         :param id_: номер изменяемого объекта
         :return: Эта функция ничего не возвращает
         """
@@ -433,6 +448,7 @@ class WindowCinema(Window):
     def delete(self, id_: int) -> None:
         """
         Каскадное удаление из базы данных.
+
         :param id_: номер удаляемого объекта
         :return: Эта функция ничего не возвращает
         """
@@ -454,6 +470,7 @@ class WindowCinema(Window):
     def browse(self, id_: int) -> None:
         """
         Подробная информация о зале
+
         :param id_: номер просматриваемого зала
         :return: Эта функция ничего не возвращает
         """
@@ -480,6 +497,7 @@ class WindowHall(Window):
     def gen_bar(self) -> None:
         """
         Генерация ToolBar`a
+
         :return:  Эта функция ничего не возвращает
         """
         if self.user == 'Администратор':
@@ -501,6 +519,7 @@ class WindowHall(Window):
     def card_data(self, id_: int) -> tuple:
         """
         Информация о сеансе
+
         :param id_: номер сеанса
         :return: tuple(дата, время, продолжительность, цена)
         """
@@ -517,6 +536,7 @@ class WindowHall(Window):
         (Сеансы в одном зале не могут идти одновременно)
         В настройках указано время на уборку зала. Это время тоже учитывается.
         По умолчанию 30 минут.
+
         :return: Эта функция ничего не возвращает
         """
         dialog = FormSession('Добавление сеанса')
@@ -563,6 +583,7 @@ class WindowHall(Window):
     def edit(self, id_: int) -> None:
         """
         Изменение сессии
+
         :param id_: номер изменяемого объекта
         :return: Эта функция ничего не возвращает
         """
@@ -586,6 +607,7 @@ class WindowHall(Window):
     def delete(self, id_: int) -> None:
         """
         Каскадное удаление из базы данных.
+
         :param id_: номер удаляемого объекта
         :return: Эта функция ничего не возвращает
         """
@@ -605,6 +627,7 @@ class WindowHall(Window):
     def browse(self, id_: int) -> None:
         """
         Подробная информация о сеансе
+
         :param id_: номер просматриваемого сеанса
         :return: Эта функция ничего не возвращает
         """
@@ -650,6 +673,7 @@ class WindowSession(Window):
     def gen_bar(self) -> None:
         """
         Генерация ToolBar`a
+
         :return:  Эта функция ничего не возвращает
         """
         action_hall = QAction('Зал', self)
