@@ -20,8 +20,11 @@ class WindowStart(QWidget):
         super().__init__()
         self.path_base_file = None
         self.cinemas = None
-        #
         self.window = window
+        self._init_ui()
+
+    def _init_ui(self):
+        #
         self.layout = QVBoxLayout(self, spacing=0)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setStyleSheet('background: rgb(255, 186, 0);')
@@ -47,7 +50,7 @@ class WindowStart(QWidget):
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
 
-    def cinemas_init(self, user) -> None:
+    def cinemas_init(self, user: str = 'Пользователь') -> None:
         """
         Инициализация окна с кинотеатрами
         :param user: Права пользователя (кассир или администратор)
@@ -60,6 +63,56 @@ class WindowStart(QWidget):
         self.cinemas.show()
         self.window.hide()
 
+    @staticmethod
+    def db_create(base):
+        base.execute("""
+                                           create table Cinemas
+                                           (
+                                               id    INTEGER not null
+                                                   primary key autoincrement
+                                                   unique,
+                                               title STRING  not null
+                                           );
+                                           """)
+        base.execute("""
+                                           create table Halls
+                                           (
+                                               id         INTEGER not null
+                                                   constraint Halls_pk
+                                                       primary key autoincrement,
+                                               title      STRING  not null,
+                                               cinema_id  INTEGER not null
+                                                   references Cinemas,
+                                               rows       INTEGER not null,
+                                               places_row INTEGER not null
+                                           );
+                                           """)
+        base.execute("""create unique index Halls_id_uindex on Halls (id);""")
+        base.execute("""
+                                           create table Sessions
+                                           (
+                                               id       INTEGER not null
+                                                   primary key autoincrement
+                                                   unique,
+                                               title    STRING  not null,
+                                               hall_id  INTEGER not null
+                                                   references Halls,
+                                               date     TEXT    not null,
+                                               time     TEXT    not null,
+                                               duration TEXT    not null,
+                                               price    INTEGER default 0 not null
+                                           );
+                                           """)
+        base.execute("""
+                                           create table Places
+                                           (
+                                               row        INTEGER not null,
+                                               place      INTEGER not null,
+                                               session_id INTEGER
+                                                   references Sessions
+                                           );
+                                           """)
+
     def create_base(self) -> None:
         """
         Созадние базы данных и её использование
@@ -71,53 +124,7 @@ class WindowStart(QWidget):
             temp_base_path = os.path.abspath(f'../temp/temp_base_{date}.sqlite')
             with open(temp_base_path, mode='w') as _:
                 with get_base(temp_base_path, True) as base:
-                    base.execute("""
-                                    create table Cinemas
-                                    (
-                                        id    INTEGER not null
-                                            primary key autoincrement
-                                            unique,
-                                        title STRING  not null
-                                    );
-                                    """)
-                    base.execute("""
-                                    create table Halls
-                                    (
-                                        id         INTEGER not null
-                                            constraint Halls_pk
-                                                primary key autoincrement,
-                                        title      STRING  not null,
-                                        cinema_id  INTEGER not null
-                                            references Cinemas,
-                                        rows       INTEGER not null,
-                                        places_row INTEGER not null
-                                    );
-                                    """)
-                    base.execute("""create unique index Halls_id_uindex on Halls (id);""")
-                    base.execute("""
-                                    create table Sessions
-                                    (
-                                        id       INTEGER not null
-                                            primary key autoincrement
-                                            unique,
-                                        title    STRING  not null,
-                                        hall_id  INTEGER not null
-                                            references Halls,
-                                        date     TEXT    not null,
-                                        time     TEXT    not null,
-                                        duration TEXT    not null,
-                                        price    INTEGER default 0 not null
-                                    );
-                                    """)
-                    base.execute("""
-                                    create table Places
-                                    (
-                                        row        INTEGER not null,
-                                        place      INTEGER not null,
-                                        session_id INTEGER
-                                            references Sessions
-                                    );
-                                    """)
+                    self.db_create(base)
             self.path_base_file = os.path.abspath(QFileDialog.getSaveFileName(
                 self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
             if self.path_base_file:
@@ -148,6 +155,11 @@ class Window(QWidget):
         self.path_base_file = start.path_base_file
         self.user = user
         #
+        self._init_ui()
+        self.update_()
+
+    def _init_ui(self):
+        #
         self.grid = QGridLayout(spacing=0)
         self.grid.setContentsMargins(0, 0, 0, 0)
         self.grid_card = QGridLayout(spacing=0)
@@ -174,8 +186,6 @@ class Window(QWidget):
         self.grid.addWidget(self.menubar)
         self.grid.addWidget(self.label_user)
         self.grid.addLayout(self.grid_card, 3, 0)
-        #
-        self.update_()
 
     def gen_card(self, id_: int, title: str) -> QWidget:
         """
