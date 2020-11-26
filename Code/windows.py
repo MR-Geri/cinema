@@ -50,7 +50,7 @@ class WindowStart(QWidget):
         self.button_create.clicked.connect(self.create_base)
         self.button_load.clicked.connect(self.load_base)
 
-    def cinemas_init(self, user: str = 'Пользователь') -> None:
+    def _init_cinemas(self, user: str = 'Пользователь') -> None:
         """
         Инициализация окна с кинотеатрами
         :param user: Права пользователя (кассир или администратор)
@@ -104,13 +104,13 @@ class WindowStart(QWidget):
                                            );
                                            """)
         base.execute("""
-                                           create table Places
-                                           (
-                                               row        INTEGER not null,
-                                               place      INTEGER not null,
-                                               session_id INTEGER
-                                                   references Sessions
-                                           );
+                       create table Places
+                       (
+                           row        INTEGER not null,
+                           place      INTEGER not null,
+                           session_id INTEGER
+                               references Sessions
+                       );
                                            """)
 
     def create_base(self) -> None:
@@ -129,7 +129,7 @@ class WindowStart(QWidget):
                 self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
             if self.path_base_file:
                 shutil.copy2(temp_base_path, self.path_base_file)
-                self.cinemas_init('Администратор')
+                self._init_cinemas('Администратор')
             os.remove(temp_base_path)
         dialog.deleteLater()
 
@@ -143,7 +143,7 @@ class WindowStart(QWidget):
         if self.path_base_file:
             dialog = FormLogin()
             if dialog.exec_() == QDialog.Accepted:
-                self.cinemas_init(dialog.user)
+                self._init_cinemas(dialog.user)
             dialog.deleteLater()
 
 

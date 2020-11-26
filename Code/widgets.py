@@ -140,9 +140,9 @@ class WidgetPlacement(QWidget):
         self.take_place = set(take_place)
         self.d_row = d_row
         self.d_places = d_places
-        self._update()
+        self._init_ui()
 
-    def _update(self) -> None:
+    def _init_ui(self) -> None:
         screen = QLabel('Экран')
         screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         screen.setFont(QFont('MS Shell Dlg 2', 16))

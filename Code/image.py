@@ -14,6 +14,7 @@ def ticket(row: int, place: int, hall: str, price: int, date: str) -> None:
     im = Image.open(path_ticket)
     text = ImageDraw.Draw(im)
     date = datetime.datetime(*reversed(list(map(int, date.split('.'))))).strftime('%d %B %Y')
+    #
     if 'ь' in date:
         day, month, year = date.replace('ь', 'я').split()
     elif 'й' in date:
@@ -21,6 +22,7 @@ def ticket(row: int, place: int, hall: str, price: int, date: str) -> None:
     else:
         day, month, year = date.split()
         month += 'а'
+    #
     lines = [f'Ряд: {row}', f'Место: {place}', f'{hall}']
     for ind, line in enumerate(lines):
         text.text(

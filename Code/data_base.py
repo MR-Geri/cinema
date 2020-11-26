@@ -1,5 +1,6 @@
 import sqlite3
 from contextlib import contextmanager
+from typing import Generator
 
 
 @contextmanager
@@ -32,5 +33,5 @@ class Base:
         self.get_url = get_url
         self.params = params
 
-    def __iter__(self) -> object:
+    def __iter__(self) -> Generator[str, None, None]:
         return (i for i in get_data_base(self.path, self.get_url, self.params))
