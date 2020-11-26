@@ -532,6 +532,7 @@ class WindowHall(Window):
             """SELECT date, time, duration, price FROM Sessions WHERE id = ?""",
             (id_,)
         )[0]
+
         return date, time, duration, price
 
     def new_session(self) -> None:
@@ -724,5 +725,5 @@ class WindowSession(Window):
                     th.start()
 
     def update_(self) -> None:
-        """ Эта функция должна быть пустая """
+        """ Эта функция должна быть пустой """
         pass

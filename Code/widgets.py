@@ -57,7 +57,7 @@ class WidgetCinemaCard(QWidget):
             #
             card = QLabel(title_session)
             card.setFont(QFont('MS Shell Dlg 2', 20))
-            card.setAlignment(Qt.AlignHCenter)
+            card.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
             #
             q_list_card = QListWidgetItem(self.sessions)
             q_list_card.setSizeHint(card.sizeHint())
