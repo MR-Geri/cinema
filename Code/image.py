@@ -5,14 +5,13 @@ from PIL import Image, ImageDraw, ImageFont
 from settings import path_temp, path_ticket, path_font
 
 
-image = Image.open(path_ticket)
 locale.setlocale(locale.LC_ALL, '')
 font_70 = ImageFont.truetype(path_font, size=70)
 font_100 = ImageFont.truetype(path_font, size=100)
 
 
 def ticket(row: int, place: int, hall: str, price: int, date: str) -> None:
-    im = image.copy()
+    im = Image.open(path_ticket)
     text = ImageDraw.Draw(im)
     date = datetime.datetime(*reversed(list(map(int, date.split('.'))))).strftime('%d %B %Y')
     if 'ь' in date:
