@@ -4,7 +4,7 @@ import os
 
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import Qt
 
 from settings import path_accounts, path_icon, path_image_start
@@ -43,13 +43,14 @@ class FormLogin(QDialog):
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
         #
+        self.label.adjustSize()
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
         self.button_cashier.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                           'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         self.button_admin.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                         'QPushButton:hover {background-color: rgb(200, 200, 200);}')
-        #
+        # 285 39
         self.user = None
 
     def cashier(self) -> None:
@@ -79,17 +80,14 @@ class FormInfo(QDialog):
         self.setLayout(self.gridLayout)
 
 
-class FormInfoText(QDialog):
-    def __init__(self, text: str = '') -> None:
+class Message(QMessageBox):
+    def __init__(self, title_window: str = '', text: str = '', informative_text: str = '') -> None:
         super().__init__()
-        path = os.path.abspath('../form/form_info.ui')
-        uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
-        #
-        self.image.hide()
-        self.label.setText(text)
-        #
-        self.setLayout(self.gridLayout)
+        self.setWindowTitle(title_window)
+        self.setIcon(QMessageBox.Warning)
+        self.setText(text)
+        self.setInformativeText(informative_text)
 
 
 class FormCinema(QDialog):

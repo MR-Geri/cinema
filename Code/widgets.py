@@ -14,13 +14,13 @@ class WidgetCinemasCard(QWidget):
         self.label_places = QLabel(f'Всего мест: {quantity_places}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
-        self.label_title.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_halls.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_sessions.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_places.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_halls.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_sessions.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_places.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.button_browse = QPushButton('Просмотреть')
-        self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_browse.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.gridLayout = QGridLayout()
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
@@ -29,9 +29,9 @@ class WidgetCinemasCard(QWidget):
         self.gridLayout.addWidget(self.label_places, 4, 0, 1, 0)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
-            self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_edit.setFont(QFont('MS Shell Dlg 2', 20))
             self.button_delete = QPushButton('Удалить')
-            self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_delete.setFont(QFont('MS Shell Dlg 2', 20))
             self.gridLayout.addWidget(self.button_edit, 5, 0)
             self.gridLayout.addWidget(self.button_delete, 5, 1)
             self.gridLayout.addWidget(self.button_browse, 5, 2)
@@ -51,12 +51,12 @@ class WidgetCinemaCard(QWidget):
         self.label_places = QLabel(f'Количество мест: {quantity_places}')
         #
         self.sessions = QListWidget()
-        self.sessions.setMaximumHeight(160)
+        self.sessions.setMaximumHeight(200)
         self.sessions.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         for title_session in sessions:
             #
             card = QLabel(title_session)
-            card.setFont(QFont('MS Shell Dlg 2', 16))
+            card.setFont(QFont('MS Shell Dlg 2', 20))
             card.setAlignment(Qt.AlignHCenter)
             #
             q_list_card = QListWidgetItem(self.sessions)
@@ -65,12 +65,12 @@ class WidgetCinemaCard(QWidget):
             self.sessions.setItemWidget(q_list_card, card)
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
-        self.label_title.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_sessions.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_places.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_sessions.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_places.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.button_browse = QPushButton('Просмотреть')
-        self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_browse.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.gridLayout = QGridLayout()
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
@@ -80,9 +80,9 @@ class WidgetCinemaCard(QWidget):
         self.gridLayout.addWidget(self.sessions, 2, 1, 2, 2)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
-            self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_edit.setFont(QFont('MS Shell Dlg 2', 20))
             self.button_delete = QPushButton('Удалить')
-            self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_delete.setFont(QFont('MS Shell Dlg 2', 20))
             self.gridLayout.addWidget(self.button_edit, 4, 0)
             self.gridLayout.addWidget(self.button_delete, 4, 1)
             self.gridLayout.addWidget(self.button_browse, 4, 2)
@@ -105,14 +105,14 @@ class WidgetHallCard(QWidget):
         self.label_price = QLabel(f'Цена билета: {price}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
-        self.label_title.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_date.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_time.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_duration.setFont(QFont('MS Shell Dlg 2', 16))
-        self.label_price.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_date.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_time.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_duration.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_price.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.button_browse = QPushButton('Просмотреть')
-        self.button_browse.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_browse.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
         self.gridLayout.addWidget(self.label_date, 2, 0, 1, 0)
@@ -121,9 +121,9 @@ class WidgetHallCard(QWidget):
         self.gridLayout.addWidget(self.label_price, 5, 0, 1, 0)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
-            self.button_edit.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_edit.setFont(QFont('MS Shell Dlg 2', 20))
             self.button_delete = QPushButton('Удалить')
-            self.button_delete.setFont(QFont('MS Shell Dlg 2', 16))
+            self.button_delete.setFont(QFont('MS Shell Dlg 2', 20))
             self.gridLayout.addWidget(self.button_edit, 6, 0)
             self.gridLayout.addWidget(self.button_delete, 6, 1)
             self.gridLayout.addWidget(self.button_browse, 6, 2)
@@ -145,7 +145,7 @@ class WidgetPlacement(QWidget):
     def _init_ui(self) -> None:
         screen = QLabel('Экран')
         screen.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        screen.setFont(QFont('MS Shell Dlg 2', 16))
+        screen.setFont(QFont('MS Shell Dlg 2', 20))
         screen.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         screen.setStyleSheet('background: rgb(0, 0, 0); color: rgb(255, 255, 255);')
         #
@@ -160,13 +160,13 @@ class WidgetPlacement(QWidget):
         for row in range(self.d_row):
             label = QLabel(f'{row + 1}{"  " * (about - len(str(row + 1)))}')
             label.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
-            label.setFont(QFont('PT Mono', 16))
+            label.setFont(QFont('PT Mono', 20))
             #
             place_layout = QHBoxLayout()
             place_layout.addWidget(label)
             for place in range(self.d_places):
                 button = QPushButton(str(place + 1), objectName='buttonPlace')
-                button.setFont(QFont('MS Shell Dlg 2', 16))
+                button.setFont(QFont('MS Shell Dlg 2', 20))
                 button.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
                 if (row + 1, place + 1) in self.take_place:
                     button.setStyleSheet(

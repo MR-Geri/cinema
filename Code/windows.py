@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 
 from Code.MyMainWindow import MainWindow
-from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormInfoText, FormSession
+from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormSession, Message
 from Code.data_base import get_data_base, get_base, Base
 from Code.image import ticket
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
@@ -34,10 +34,10 @@ class WindowStart(QWidget):
         self.button_create = QPushButton("Создать базу данных")
         self.button_load = QPushButton("Загрузить базу данных")
         #
-        self.button_create.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_create.setFont(QFont('MS Shell Dlg 2', 20))
         self.button_create.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                          'QPushButton:hover {background-color: rgb(200, 200, 200);}')
-        self.button_load.setFont(QFont('MS Shell Dlg 2', 16))
+        self.button_load.setFont(QFont('MS Shell Dlg 2', 20))
         self.button_load.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                        'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         #
@@ -179,7 +179,7 @@ class Window(QWidget):
         self.ActMenu.addAction(action_exit)
         #
         self.label_user = QLabel(self.user)
-        self.label_user.setFont(QFont('MS Shell Dlg 2', 16))
+        self.label_user.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_user.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
         self.label_user.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         #
@@ -287,8 +287,10 @@ class WindowCinemas(Window):
                     INSERT INTO Cinemas (id, title) VALUES ((SELECT id FROM Cinemas ORDER BY id DESC LIMIT 1) + 1, ?);
                     """, (dialog.title.text(),))
                 else:
-                    dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
-                    dialog_.exec_()
+                    error_message = Message(title_window='Ошибка!',
+                                            text=f'Кинотеатр с таким названием уже есть!',
+                                            informative_text='Введите другое название.')
+                    error_message.exec()
                     self.new_cinema()
             self.update_()
         dialog.deleteLater()
@@ -409,7 +411,7 @@ class WindowCinema(Window):
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
                 count = int(get_data_base(self.path_base_file,
-                                          """SELECT COUNT(*) FROM Cinemas WHERE title = ?""",
+                                          """SELECT COUNT(*) FROM Halls WHERE title = ?""",
                                           (dialog.title.text(),))[0][0])
                 if count == 0:
                     base.execute("""
@@ -421,8 +423,10 @@ class WindowCinema(Window):
                         dialog.rows.value(),
                         dialog.places_row.value()))
                 else:
-                    dialog_ = FormInfoText(f'Кинотеатр с таким названием уже есть.')
-                    dialog_.exec_()
+                    error_message = Message(title_window='Ошибка!',
+                                            text=f'Зал с таким названием уже есть!',
+                                            informative_text='Введите другое название.')
+                    error_message.exec()
                     self.new_hall()
             self.update_()
         dialog.deleteLater()
@@ -563,8 +567,8 @@ class WindowHall(Window):
                     )
                     finish = start + datetime.timedelta(hours=h, minutes=m)
                     if start <= inp_start <= finish or start <= inp_finish <= finish:
-                        dialog_ = FormInfoText(f'Сеанс пересекается с другим сеансом.')
-                        dialog_.exec_()
+                        error_message = Message(title_window='Ошибка!', text=f'Сеанс пересекается с другим сеансом!')
+                        error_message.exec()
                         self.new_session()
                         return
                 base.execute("""
