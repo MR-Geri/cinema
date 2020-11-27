@@ -3,11 +3,11 @@ import json
 import os
 
 from PyQt5 import uic
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt5.QtGui import QPixmap, QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import Qt
 
-from settings import path_accounts, path_icon, path_image_start
+from settings import path_accounts, path_icon, path_image_start, path_password_font
 
 
 class Login(QDialog):
@@ -16,6 +16,10 @@ class Login(QDialog):
         path = os.path.abspath('../form/login.ui')
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
+        #
+        font_id = QFontDatabase.addApplicationFont(path_password_font)
+        font_name = QFontDatabase.applicationFontFamilies(font_id)[0]
+        self.line_password.setFont(QFont(font_name, 20))
         #
         self.button_sign_in.clicked.connect(self.sign_in)
         self.line_login.textChanged.connect(self.update_line)
@@ -43,7 +47,6 @@ class FormLogin(QDialog):
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
         #
-        self.label.adjustSize()
         self.button_cashier.clicked.connect(self.cashier)
         self.button_admin.clicked.connect(self.admin)
         self.button_cashier.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'

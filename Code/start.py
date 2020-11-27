@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFontDatabase
 from PyQt5.QtWidgets import *
 
 from Code.MyMainWindow import MainWindow
