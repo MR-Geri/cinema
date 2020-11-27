@@ -16,7 +16,7 @@ class Login(QDialog):
         path = os.path.abspath('../form/login.ui')
         uic.loadUi(path, self)
         self.setWindowIcon(QIcon(path_icon))
-        #
+        #  Безопасный шрифт для пароля
         font_id = QFontDatabase.addApplicationFont(path_password_font)
         font_name = QFontDatabase.applicationFontFamilies(font_id)[0]
         self.line_password.setFont(QFont(font_name, 20))
@@ -53,7 +53,7 @@ class FormLogin(QDialog):
                                           'QPushButton:hover {background-color: rgb(200, 200, 200);}')
         self.button_admin.setStyleSheet('QPushButton:!hover{background-color: rgb(255, 255, 255);}'
                                         'QPushButton:hover {background-color: rgb(200, 200, 200);}')
-        # 285 39
+        #
         self.user = None
 
     def cashier(self) -> None:

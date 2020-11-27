@@ -79,7 +79,6 @@ class TitleBar(QWidget):
         dialog = FormInfo()
         dialog.exec_()
         dialog.deleteLater()
-        print("Своя Кнопка ")
         self.signalButtonInfo.emit()
 
     def showMaximized(self) -> None:
