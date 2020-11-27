@@ -59,7 +59,7 @@
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
@@ -71,7 +71,7 @@
      <widget class="QLineEdit" name="line_password">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
      </widget>
@@ -80,7 +80,7 @@
      <widget class="QLabel" name="label">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
@@ -92,7 +92,7 @@
      <widget class="QLineEdit" name="line_login">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
      </widget>
@@ -101,7 +101,7 @@
      <widget class="QPushButton" name="button_sign_in">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -122,7 +122,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">

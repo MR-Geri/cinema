@@ -48,7 +48,7 @@
      <widget class="QPushButton" name="button_save">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>26</pointsize>
        </font>
       </property>
       <property name="text">
@@ -60,7 +60,7 @@
      <widget class="QPushButton" name="button_cancel">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>26</pointsize>
        </font>
       </property>
       <property name="text">
@@ -72,7 +72,7 @@
      <widget class="QLineEdit" name="title">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>26</pointsize>
        </font>
       </property>
       <property name="alignment">
@@ -90,7 +90,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>26</pointsize>
         <italic>false</italic>
        </font>
       </property>

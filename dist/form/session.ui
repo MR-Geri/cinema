@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>530</width>
-    <height>410</height>
+    <width>531</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>531</width>
-     <height>411</height>
+     <height>466</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -54,7 +54,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
         <italic>false</italic>
        </font>
       </property>
@@ -76,7 +76,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
         <italic>false</italic>
        </font>
       </property>
@@ -98,7 +98,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
         <italic>false</italic>
        </font>
       </property>
@@ -114,7 +114,7 @@
      <widget class="QPushButton" name="button_cancel">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
@@ -126,7 +126,7 @@
      <widget class="QDateEdit" name="date">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="alignment">
@@ -144,7 +144,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
         <italic>false</italic>
        </font>
       </property>
@@ -166,7 +166,7 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
         <italic>false</italic>
        </font>
       </property>
@@ -182,7 +182,7 @@
      <widget class="QTimeEdit" name="time">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="alignment">
@@ -194,7 +194,7 @@
      <widget class="QPushButton" name="button_save">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
@@ -206,7 +206,7 @@
      <widget class="QTimeEdit" name="duration">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="alignment">
@@ -218,7 +218,7 @@
      <widget class="QLineEdit" name="title">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="alignment">
@@ -230,7 +230,7 @@
      <widget class="QSpinBox" name="price">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="alignment">
