@@ -6,5 +6,5 @@ path_accounts = os.path.abspath('../accounts.json')
 path_image_start = os.path.abspath('../image/start.jpg')
 path_temp = os.path.abspath('../temp/')
 path_ticket = os.path.abspath('../image/ticket.jpg')
-path_font = os.path.abspath('../ticket.otf')
+path_font = os.path.abspath('../My_Font/ticket.otf')
 time_restart_session = 29  # minutes
