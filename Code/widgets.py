@@ -5,19 +5,21 @@ from PyQt5.QtWidgets import *
 
 class WidgetCinemasCard(QWidget):
     def __init__(self, user: str, title: str, quantity_halls: int,
-                 quantity_sessions: int, quantity_places: int) -> None:
+                 quantity_sessions: int, quantity_places: int, static: int) -> None:
         super().__init__()
         #
         self.label_title = QLabel(title)
         self.label_halls = QLabel(f'Всего залов: {quantity_halls}')
         self.label_sessions = QLabel(f'Всего сеансов: {quantity_sessions}')
         self.label_places = QLabel(f'Всего мест: {quantity_places}')
+        self.label_static = QLabel(f'Выручка: {static}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
         self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_halls.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_sessions.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_places.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_static.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 20))
@@ -27,28 +29,31 @@ class WidgetCinemasCard(QWidget):
         self.gridLayout.addWidget(self.label_halls, 2, 0, 1, 0)
         self.gridLayout.addWidget(self.label_sessions, 3, 0, 1, 0)
         self.gridLayout.addWidget(self.label_places, 4, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_static, 5, 0, 1, 0)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 20))
             self.button_delete = QPushButton('Удалить')
             self.button_delete.setFont(QFont('MS Shell Dlg 2', 20))
-            self.gridLayout.addWidget(self.button_edit, 5, 0)
-            self.gridLayout.addWidget(self.button_delete, 5, 1)
-            self.gridLayout.addWidget(self.button_browse, 5, 2)
+            self.gridLayout.addWidget(self.button_edit, 6, 0)
+            self.gridLayout.addWidget(self.button_delete, 6, 1)
+            self.gridLayout.addWidget(self.button_browse, 6, 2)
             #
         else:
-            self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
+            self.gridLayout.addWidget(self.button_browse, 6, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
 
 
 class WidgetCinemaCard(QWidget):
-    def __init__(self, user: str, title: str, quantity_sessions: int, quantity_places: int, sessions: list) -> None:
+    def __init__(self, user: str, title: str, quantity_sessions: int,
+                 quantity_places: int, sessions: list, static: int) -> None:
         super().__init__()
         #
         self.label_title = QLabel(title)
         self.label_sessions = QLabel(f'Количество сеансов: {quantity_sessions}')
         self.label_places = QLabel(f'Количество мест: {quantity_places}')
+        self.label_static = QLabel(f'Выручка: {static}')
         #
         self.sessions = QListWidget()
         self.sessions.setMaximumHeight(200)
@@ -68,6 +73,7 @@ class WidgetCinemaCard(QWidget):
         self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_sessions.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_places.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_static.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 20))
@@ -76,25 +82,27 @@ class WidgetCinemaCard(QWidget):
         self.gridLayout.addWidget(self.label_title, 1, 0, 1, 0)
         self.gridLayout.addWidget(self.label_sessions, 2, 0)
         self.gridLayout.addWidget(self.label_places, 3, 0)
-        self.gridLayout.addWidget(self.label_places, 3, 0)
-        self.gridLayout.addWidget(self.sessions, 2, 1, 2, 2)
+        self.gridLayout.addWidget(self.label_static, 4, 0)
+        self.gridLayout.addWidget(self.sessions, 2, 1, 3, 2)
+
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 20))
             self.button_delete = QPushButton('Удалить')
             self.button_delete.setFont(QFont('MS Shell Dlg 2', 20))
-            self.gridLayout.addWidget(self.button_edit, 4, 0)
-            self.gridLayout.addWidget(self.button_delete, 4, 1)
-            self.gridLayout.addWidget(self.button_browse, 4, 2)
+            self.gridLayout.addWidget(self.button_edit, 5, 0)
+            self.gridLayout.addWidget(self.button_delete, 5, 1)
+            self.gridLayout.addWidget(self.button_browse, 5, 2)
             #
         else:
-            self.gridLayout.addWidget(self.button_browse, 4, 0, 1, 0)
+            self.gridLayout.addWidget(self.button_browse, 5, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
 
 
 class WidgetHallCard(QWidget):
-    def __init__(self, user: str, title: str, date: str, time: str, duration: str, price: str) -> None:
+    def __init__(self, user: str, title: str, date: str, time: str,
+                 duration: str, price: str, static: int) -> None:
         super().__init__()
         self.gridLayout = QGridLayout()
         #
@@ -103,6 +111,7 @@ class WidgetHallCard(QWidget):
         self.label_time = QLabel(f'Время начала: {time}')
         self.label_duration = QLabel(f'Продолжительность: {duration}')
         self.label_price = QLabel(f'Цена билета: {price}')
+        self.label_static = QLabel(f'Выручка: {static}')
         #
         self.label_title.setAlignment(Qt.AlignHCenter)
         self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
@@ -110,6 +119,7 @@ class WidgetHallCard(QWidget):
         self.label_time.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_duration.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_price.setFont(QFont('MS Shell Dlg 2', 20))
+        self.label_static.setFont(QFont('MS Shell Dlg 2', 20))
         #
         self.button_browse = QPushButton('Просмотреть')
         self.button_browse.setFont(QFont('MS Shell Dlg 2', 20))
@@ -119,17 +129,18 @@ class WidgetHallCard(QWidget):
         self.gridLayout.addWidget(self.label_time, 3, 0, 1, 0)
         self.gridLayout.addWidget(self.label_duration, 4, 0, 1, 0)
         self.gridLayout.addWidget(self.label_price, 5, 0, 1, 0)
+        self.gridLayout.addWidget(self.label_static, 6, 0, 1, 0)
         if user == 'Администратор':
             self.button_edit = QPushButton('Изменить')
             self.button_edit.setFont(QFont('MS Shell Dlg 2', 20))
             self.button_delete = QPushButton('Удалить')
             self.button_delete.setFont(QFont('MS Shell Dlg 2', 20))
-            self.gridLayout.addWidget(self.button_edit, 6, 0)
-            self.gridLayout.addWidget(self.button_delete, 6, 1)
-            self.gridLayout.addWidget(self.button_browse, 6, 2)
+            self.gridLayout.addWidget(self.button_edit, 7, 0)
+            self.gridLayout.addWidget(self.button_delete, 7, 1)
+            self.gridLayout.addWidget(self.button_browse, 7, 2)
             #
         else:
-            self.gridLayout.addWidget(self.button_browse, 6, 0, 1, 0)
+            self.gridLayout.addWidget(self.button_browse, 7, 0, 1, 0)
         #
         self.setLayout(self.gridLayout)
 

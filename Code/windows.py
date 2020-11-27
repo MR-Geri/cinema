@@ -171,12 +171,12 @@ class Window(QWidget):
         self.menubar = QMenuBar()
         self.menubar.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         #
-        self.ActMenu = self.menubar.addMenu('&Навигация')
+        self.MoveMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
         action_exit = QAction('Выйти', self)
         action_exit.triggered.connect(self.window.close)
         action_exit.triggered.connect(self.start.window.show)
-        self.ActMenu.addAction(action_exit)
+        self.MoveMenu.addAction(action_exit)
         #
         self.label_user = QLabel(self.user)
         self.label_user.setFont(QFont('MS Shell Dlg 2', 20))
@@ -267,7 +267,14 @@ class WindowCinemas(Window):
             """SELECT rows * places_row FROM Halls h WHERE h.cinema_id = ?""",
             (id_,)
         )])
-        return quantity_halls, quantity_sessions, quantity_places
+        static = [i[0] for i in get_data_base(
+            self.path_base_file,
+            """SELECT s.price FROM Halls h, Sessions s, Places p
+               WHERE h.cinema_id = ? AND s.hall_id = h.id AND p.session_id = s.id""",
+            (id_,)
+        )]
+        static = sum(static if static != [None] else [0])
+        return quantity_halls, quantity_sessions, quantity_places, static
 
     def new_cinema(self) -> None:
         """
@@ -378,7 +385,8 @@ class WindowCinema(Window):
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.cinemas.window.show)
-        self.ActMenu.addAction(action_cinemas)
+        action_cinemas.triggered.connect(self.cinemas.update_)
+        self.MoveMenu.addAction(action_cinemas)
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -398,7 +406,14 @@ class WindowCinema(Window):
             """SELECT rows * places_row FROM Halls h WHERE h.id = ?""",
             (id_,)
         )[0][0])
-        return quantity_sessions, quantity_places, sessions
+        static = [i[0] for i in get_data_base(
+            self.path_base_file,
+            """SELECT s.price  FROM Sessions s, Places p  
+            WHERE s.hall_id = ? AND p.session_id = s.id;""",
+            (id_,)
+        )]
+        static = sum(static if static != [None] else [0])
+        return quantity_sessions, quantity_places, sessions, static
 
     def new_hall(self) -> None:
         """
@@ -516,12 +531,14 @@ class WindowHall(Window):
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.window.close)
         action_cinema.triggered.connect(self.cinema.window.show)
-        self.ActMenu.addAction(action_cinema)
+        action_cinema.triggered.connect(self.cinema.update_)
+        self.MoveMenu.addAction(action_cinema)
         #
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.cinema.cinemas.window.show)
-        self.ActMenu.addAction(action_cinemas)
+        action_cinemas.triggered.connect(self.cinema.cinemas.update_)
+        self.MoveMenu.addAction(action_cinemas)
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -535,8 +552,15 @@ class WindowHall(Window):
             """SELECT date, time, duration, price FROM Sessions WHERE id = ?""",
             (id_,)
         )[0]
-
-        return date, time, duration, price
+        static = [i[0] for i in get_data_base(
+            self.path_base_file,
+            """SELECT COUNT(p.row) *  s.price
+            FROM Sessions s, Places p 
+            WHERE s.id = ? AND p.session_id = s.id""",
+            (id_,)
+        )]
+        static = sum(static if static != [None] else [0])
+        return date, time, duration, price, static
 
     def new_session(self) -> None:
         """
@@ -687,19 +711,21 @@ class WindowSession(Window):
         action_hall = QAction('Зал', self)
         action_hall.triggered.connect(self.window.close)
         action_hall.triggered.connect(self.hall.window.show)
-        self.ActMenu.addAction(action_hall)
+        action_hall.triggered.connect(self.hall.update_)
+        self.MoveMenu.addAction(action_hall)
         #
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.window.close)
-        action_cinema.triggered.connect(self.hall.cinema.window.show)
-        self.ActMenu.addAction(action_cinema)
+        action_cinema.triggered.connect(self.hall.cinema.update_)
+        self.MoveMenu.addAction(action_cinema)
         #
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.hall.cinema.cinemas.window.show)
-        self.ActMenu.addAction(action_cinemas)
+        action_cinemas.triggered.connect(self.hall.cinema.cinemas.update_)
+        self.MoveMenu.addAction(action_cinemas)
         #
-        action_reservation = QAction('Обновить', self)
+        action_reservation = QAction('Обновить базу', self)
         action_reservation.triggered.connect(self.reservations)
         self.menubar.addAction(action_reservation)
 
