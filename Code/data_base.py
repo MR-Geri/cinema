@@ -1,6 +1,6 @@
 import sqlite3
 from contextlib import contextmanager
-from typing import Generator
+from typing import *
 
 
 @contextmanager
@@ -34,7 +34,7 @@ class Base:
         self.params = params
         self.key = key
 
-    def __iter__(self) -> Generator[str, None, None]:
+    def __iter__(self) -> Generator[Tuple[Any, Any], Any, None]:
         data = get_data_base(self.path, self.get_url, self.params)
         if self.key:
             data.sort(key=self.key)
