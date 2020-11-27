@@ -716,6 +716,7 @@ class WindowSession(Window):
         #
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.window.close)
+        action_cinema.triggered.connect(self.hall.cinema.window.show)
         action_cinema.triggered.connect(self.hall.cinema.update_)
         self.MoveMenu.addAction(action_cinema)
         #
