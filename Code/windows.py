@@ -169,7 +169,7 @@ class Window(QWidget):
         self.grid_card.setContentsMargins(3, 3, 3, 3)
         #
         self.menubar = QMenuBar()
-        self.menubar.setMaximumHeight(32)
+        self.menubar.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         #
         self.ActMenu = self.menubar.addMenu('&Навигация')
         self.gen_bar()
