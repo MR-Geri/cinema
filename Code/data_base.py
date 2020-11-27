@@ -28,10 +28,14 @@ def get_data_base(path: str, get_url: str, params: tuple or dict = None) -> list
 
 
 class Base:
-    def __init__(self, path: str, get_url: str, params: tuple or dict = None) -> None:
+    def __init__(self, path: str, get_url: str, params: tuple or dict = None, key: object = None) -> None:
         self.path = path
         self.get_url = get_url
         self.params = params
+        self.key = key
 
     def __iter__(self) -> Generator[str, None, None]:
-        return (i for i in get_data_base(self.path, self.get_url, self.params))
+        data = get_data_base(self.path, self.get_url, self.params)
+        if self.key:
+            data.sort(key=self.key)
+        return ((i[0], i[1]) for i in data)

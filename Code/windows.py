@@ -493,8 +493,11 @@ class WindowHall(Window):
         self.cinema = cinema
         self.hall_id = hall_id
         self.base = Base(self.cinema.start.path_base_file,
-                         """SELECT id, title FROM Sessions WHERE  hall_id = ?""",
-                         (self.hall_id,))
+                         """SELECT id, title, date, time FROM Sessions WHERE  hall_id = ?""",
+                         (self.hall_id,),
+                         key=lambda x: datetime.datetime(
+                             *reversed(list(map(int, x[2].split('.')))), *list(map(int, x[3].split(':')))
+                         ))
         self.card = WidgetHallCard
         super().__init__(self.cinema.start, self.cinema.user)
 
