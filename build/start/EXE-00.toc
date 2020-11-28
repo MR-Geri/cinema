@@ -1,5 +1,5 @@
 ('D:\\PycharmProjects\\cinema\\build\\start\\start.exe',
- True,
+ False,
  False,
  True,
  'yandex.ico',
@@ -40,7 +40,7 @@
  [],
  False,
  False,
- 1606578803,
- [('run.exe',
-   'd:\\pycharmprojects\\cinema\\venv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\run.exe',
+ 1606583987,
+ [('runw.exe',
+   'd:\\pycharmprojects\\cinema\\venv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\runw.exe',
    'EXECUTABLE')])

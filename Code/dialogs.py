@@ -34,7 +34,6 @@ class Login(QDialog):
     def sign_in(self) -> None:
         accounts = json.load(open(path_accounts))
         if accounts.get(self.line_login.text(), None) == self.line_password.text():
-            print('Вход разрешён')
             self.accept()
         else:
             self.label_info.setText('Неправильный логин или пароль')
