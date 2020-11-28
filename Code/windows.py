@@ -1,9 +1,10 @@
 import datetime
 import os
 import shutil
+from collections import defaultdict
 from threading import Thread
 
-from PyQt5.QtChart import QChartView
+from PyQt5.QtChart import QChartView, QBarSet, QChart, QBarCategoryAxis, QValueAxis, QBarSeries
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
@@ -225,27 +226,16 @@ class Window(QWidget):
             self.cards.setItemWidget(list_card, card)
         self.grid_card.addLayout(layout, 0, 0)
 
-
-class WindowStatic(QWidget):
-    def __init__(self, window: MainWindow = None, title: str = ''):
-        super().__init__()
-        self.title = title
-        self.window = window
-        self._init_ui()
-
-    def _init_ui(self):
-        self.chartView = QChartView()
-        self.label_title = QLabel(self.title)
-        #
-        self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
-        #
-        self.label_title.setAlignment(Qt.AlignHCenter | Qt.AlignHCenter)
-        #
-        self.layout = QVBoxLayout(self, spacing=0)
-        self.layout.setContentsMargins(10, 0, 10, 0)
-        #
-        self.layout.addWidget(self.label_title)
-        self.layout.addWidget(self.chartView)
+    def static(self):
+        self.static = MainWindow()
+        self.static.setWindowTitle('Статистика')
+        self.static.setWindowIcon(QIcon(path_icon))
+        self.static.setWidget(WindowStatic(
+            self,
+            self.title_static,
+            self.base_static
+        ))
+        self.static.show()
 
 
 class WindowCinemas(Window):
@@ -255,6 +245,11 @@ class WindowCinemas(Window):
         self.card = WidgetCinemasCard
         self.base = Base(start.path_base_file, """SELECT id, title FROM Cinemas""")
         super().__init__(start, user)
+        self.title_static = 'Доход по кинотеатрам'
+        self.base_static = get_data_base(
+            self.path_base_file,
+            """SELECT c.title, s.price FROM Cinemas c, Halls h, Sessions s, Places p
+               WHERE h.cinema_id = c.id AND s.hall_id = h.id AND p.session_id = s.id""")
 
     def gen_bar(self) -> None:
         """
@@ -270,15 +265,8 @@ class WindowCinemas(Window):
             self.ActMenu.addAction(action_new_cinema)
             action_static = QAction('Статистика', self)
             action_static.setShortcut('Ctrl+B')
-            action_static.triggered.connect(self.static_cinemas)
+            action_static.triggered.connect(self.static)
             self.ActMenu.addAction(action_static)
-
-    def static_cinemas(self):
-        self.static = MainWindow()
-        self.static.setWindowTitle('Статистика')
-        self.static.setWindowIcon(QIcon(path_icon))
-        self.static.setWidget(WindowStatic(self.static, 'Информация по кинотеатрам'))
-        self.static.show()
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -404,6 +392,13 @@ class WindowCinema(Window):
                          (self.cinema_id,))
         self.card = WidgetCinemaCard
         super().__init__(self.cinemas.start, self.cinemas.user)
+        self.title_static = 'Доход по кинотеатру'
+        self.base_static = get_data_base(
+            self.path_base_file,
+            """SELECT h.title, s.price  FROM Halls h, Sessions s, Places p
+            WHERE h.cinema_id = ? AND s.hall_id = h.id AND p.session_id = s.id;""",
+            (self.cinema_id,)
+        )
 
     def gen_bar(self) -> None:
         """
@@ -419,7 +414,7 @@ class WindowCinema(Window):
             self.ActMenu.addAction(action_new_hall)
             action_static = QAction('Статистика', self)
             action_static.setShortcut('Ctrl+B')
-            action_static.triggered.connect(self.static_cinema)
+            action_static.triggered.connect(self.static)
             self.ActMenu.addAction(action_static)
         #
         action_cinemas = QAction('Кинотеатры', self)
@@ -427,9 +422,6 @@ class WindowCinema(Window):
         action_cinemas.triggered.connect(self.cinemas.window.show)
         action_cinemas.triggered.connect(self.cinemas.update_)
         self.MoveMenu.addAction(action_cinemas)
-
-    def static_cinema(self):
-        pass
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -469,11 +461,10 @@ class WindowCinema(Window):
         if dialog.exec_() == QDialog.Accepted:
             with get_base(self.path_base_file, True) as base:
                 count = int(get_data_base(self.path_base_file,
-                                          """SELECT COUNT(*) FROM Halls WHERE title = ?""",
-                                          (dialog.title.text(),))[0][0])
+                                          """SELECT COUNT(*) FROM Halls WHERE title = ? AND id = ?""",
+                                          (dialog.title.text(), self.cinema_id))[0][0])
                 if count == 0:
-                    base.execute("""
-                                    INSERT INTO Halls (id, title, cinema_id, rows, places_row) 
+                    base.execute("""INSERT INTO Halls (id, title, cinema_id, rows, places_row) 
                                     VALUES ((SELECT id FROM Halls ORDER BY id DESC LIMIT 1) + 1, ?, ?, ?, ?);
                                     """, (
                         dialog.title.text(),
@@ -558,6 +549,13 @@ class WindowHall(Window):
                          ))
         self.card = WidgetHallCard
         super().__init__(self.cinema.start, self.cinema.user)
+        self.title_static = 'Доход по залу'
+        self.base_static = get_data_base(
+            self.path_base_file,
+            """SELECT s.title, s.price 
+               FROM Sessions s, Places p WHERE s.hall_id = ? AND p.session_id = s.id""",
+            (self.hall_id,)
+        )
 
     def gen_bar(self) -> None:
         """
@@ -573,7 +571,7 @@ class WindowHall(Window):
             self.ActMenu.addAction(action_new_hall)
             action_static = QAction('Статистика', self)
             action_static.setShortcut('Ctrl+B')
-            action_static.triggered.connect(self.static_hall)
+            action_static.triggered.connect(self.static)
             self.ActMenu.addAction(action_static)
         #
         action_cinema = QAction('Кинотеатр', self)
@@ -587,9 +585,6 @@ class WindowHall(Window):
         action_cinemas.triggered.connect(self.cinema.cinemas.window.show)
         action_cinemas.triggered.connect(self.cinema.cinemas.update_)
         self.MoveMenu.addAction(action_cinemas)
-
-    def static_hall(self):
-        pass
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -605,7 +600,7 @@ class WindowHall(Window):
         )[0]
         static = [i[0] for i in get_data_base(
             self.path_base_file,
-            """SELECT COUNT(p.row) *  s.price
+            """SELECT s.price
             FROM Sessions s, Places p 
             WHERE s.id = ? AND p.session_id = s.id""",
             (id_,)
@@ -808,3 +803,56 @@ class WindowSession(Window):
     def update_(self) -> None:
         """ Эта функция должна быть пустой """
         pass
+
+
+class WindowStatic(QWidget):
+    def __init__(self, window: WindowCinemas = None, title: str = '', base: list = None) -> None:
+        super().__init__()
+        self.title = title
+        self.window = window.static
+        self.base = base
+        self._init_ui()
+
+    def _init_chart(self) -> None:
+        series = QBarSeries()
+        axis_x = QBarCategoryAxis()
+        axis_y = QValueAxis()
+        data_set = defaultdict(int)
+        for title, money in self.base:
+            data_set[title] += money
+        for title, money in data_set.items():
+            bar = QBarSet(title)
+            axis_x.append(title)
+            bar.append(money)
+            series.append(bar)
+        #
+        self.chart = QChart()
+        self.chart.addSeries(series)
+        self.chart.setAnimationOptions(QChart.SeriesAnimations)
+        #
+        series.attachAxis(axis_x)
+        self.chart.addAxis(axis_x, Qt.AlignBottom)
+        axis_y.setRange(0, max(data_set.values()))
+        axis_y.setTickCount(11)
+        self.chart.addAxis(axis_y, Qt.AlignLeft)
+        series.attachAxis(axis_y)
+        #
+        self.chart.legend().setVisible(True)
+        self.chart.legend().setAlignment(Qt.AlignBottom)
+
+    def _init_ui(self) -> None:
+        self.window.resize(1000, 900)
+        self._init_chart()
+        self.chartView = QChartView(self.chart)
+        self.chartView.setRenderHint(QPainter.Antialiasing)
+        self.label_title = QLabel(self.title)
+        #
+        self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
+        #
+        self.label_title.setAlignment(Qt.AlignHCenter | Qt.AlignHCenter)
+        #
+        self.layout = QVBoxLayout(self, spacing=0)
+        self.layout.setContentsMargins(10, 0, 10, 0)
+        #
+        self.layout.addWidget(self.label_title)
+        self.layout.addWidget(self.chartView)
