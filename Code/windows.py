@@ -183,7 +183,7 @@ class Window(QWidget):
         self.label_user.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
         self.label_user.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         #
-        self.window.resize(800, 800)
+        self.window.resize(1000, 900)
         #
         self.setLayout(self.grid)
         self.grid.addWidget(self.menubar)
