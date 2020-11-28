@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap, QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import Qt
 
-from Code.crypro import cipher
+from Code.crypto import cipher
 from settings import path_accounts, path_icon, path_image_start, path_password_font
 
 
