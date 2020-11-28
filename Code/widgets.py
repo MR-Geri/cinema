@@ -113,7 +113,7 @@ class WidgetHallCard(QWidget):
         self.label_price = QLabel(f'Цена билета: {price}')
         self.label_static = QLabel(f'Выручка: {static}')
         #
-        self.label_title.setAlignment(Qt.AlignHCenter)
+        self.label_title.setAlignment(Qt.AlignHCenter | Qt.AlignHCenter)
         self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_date.setFont(QFont('MS Shell Dlg 2', 20))
         self.label_time.setFont(QFont('MS Shell Dlg 2', 20))

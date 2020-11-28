@@ -3,6 +3,7 @@ import os
 import shutil
 from threading import Thread
 
+from PyQt5.QtChart import QChartView
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
@@ -225,6 +226,28 @@ class Window(QWidget):
         self.grid_card.addLayout(layout, 0, 0)
 
 
+class WindowStatic(QWidget):
+    def __init__(self, window: MainWindow = None, title: str = ''):
+        super().__init__()
+        self.title = title
+        self.window = window
+        self._init_ui()
+
+    def _init_ui(self):
+        self.chartView = QChartView()
+        self.label_title = QLabel(self.title)
+        #
+        self.label_title.setFont(QFont('MS Shell Dlg 2', 20))
+        #
+        self.label_title.setAlignment(Qt.AlignHCenter | Qt.AlignHCenter)
+        #
+        self.layout = QVBoxLayout(self, spacing=0)
+        self.layout.setContentsMargins(10, 0, 10, 0)
+        #
+        self.layout.addWidget(self.label_title)
+        self.layout.addWidget(self.chartView)
+
+
 class WindowCinemas(Window):
     def __init__(self, start: WindowStart = None, user: str = 'Пользователь') -> None:
         self.window = start.cinemas
@@ -240,10 +263,22 @@ class WindowCinemas(Window):
         :return:  Эта функция ничего не возвращает
         """
         if self.user == 'Администратор':
+            self.ActMenu = self.menubar.addMenu('&Действия')
             action_new_cinema = QAction('Добавить кинотеатр', self)
             action_new_cinema.setShortcut('Ctrl+N')
             action_new_cinema.triggered.connect(self.new_cinema)
-            self.menubar.addAction(action_new_cinema)
+            self.ActMenu.addAction(action_new_cinema)
+            action_static = QAction('Статистика', self)
+            action_static.setShortcut('Ctrl+B')
+            action_static.triggered.connect(self.static_cinemas)
+            self.ActMenu.addAction(action_static)
+
+    def static_cinemas(self):
+        self.static = MainWindow()
+        self.static.setWindowTitle('Статистика')
+        self.static.setWindowIcon(QIcon(path_icon))
+        self.static.setWidget(WindowStatic(self.static, 'Информация по кинотеатрам'))
+        self.static.show()
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -377,16 +412,24 @@ class WindowCinema(Window):
         :return:  Эта функция ничего не возвращает
         """
         if self.user == 'Администратор':
+            self.ActMenu = self.menubar.addMenu('&Действия')
             action_new_hall = QAction('Добавить зал', self)
             action_new_hall.setShortcut('Ctrl+N')
             action_new_hall.triggered.connect(self.new_hall)
-            self.menubar.addAction(action_new_hall)
+            self.ActMenu.addAction(action_new_hall)
+            action_static = QAction('Статистика', self)
+            action_static.setShortcut('Ctrl+B')
+            action_static.triggered.connect(self.static_cinema)
+            self.ActMenu.addAction(action_static)
         #
         action_cinemas = QAction('Кинотеатры', self)
         action_cinemas.triggered.connect(self.window.close)
         action_cinemas.triggered.connect(self.cinemas.window.show)
         action_cinemas.triggered.connect(self.cinemas.update_)
         self.MoveMenu.addAction(action_cinemas)
+
+    def static_cinema(self):
+        pass
 
     def card_data(self, id_: int) -> tuple:
         """
@@ -523,10 +566,15 @@ class WindowHall(Window):
         :return:  Эта функция ничего не возвращает
         """
         if self.user == 'Администратор':
+            self.ActMenu = self.menubar.addMenu('&Действия')
             action_new_hall = QAction('Добавить сеанс', self)
             action_new_hall.setShortcut('Ctrl+N')
             action_new_hall.triggered.connect(self.new_session)
-            self.menubar.addAction(action_new_hall)
+            self.ActMenu.addAction(action_new_hall)
+            action_static = QAction('Статистика', self)
+            action_static.setShortcut('Ctrl+B')
+            action_static.triggered.connect(self.static_hall)
+            self.ActMenu.addAction(action_static)
         #
         action_cinema = QAction('Кинотеатр', self)
         action_cinema.triggered.connect(self.window.close)
@@ -539,6 +587,9 @@ class WindowHall(Window):
         action_cinemas.triggered.connect(self.cinema.cinemas.window.show)
         action_cinemas.triggered.connect(self.cinema.cinemas.update_)
         self.MoveMenu.addAction(action_cinemas)
+
+    def static_hall(self):
+        pass
 
     def card_data(self, id_: int) -> tuple:
         """
