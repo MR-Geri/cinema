@@ -665,7 +665,7 @@ class WindowHall(Window):
         :param id_: номер изменяемого объекта
         :return: Эта функция ничего не возвращает
         """
-        dialog = FormSession('Изменение зала',
+        dialog = FormSession('Изменение сеанса',
                              *get_data_base(self.path_base_file,
                                             """SELECT title, date, time, duration FROM Sessions WHERE id = ?""",
                                             (id_,))[0])
