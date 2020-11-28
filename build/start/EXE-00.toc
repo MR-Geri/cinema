@@ -30,6 +30,9 @@
   ('pyi_rth_multiprocessing',
    'D:\\PycharmProjects\\cinema\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
    'PYSOURCE'),
+  ('pyi_rth_pkgres',
+   'D:\\PycharmProjects\\cinema\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgres.py',
+   'PYSOURCE'),
   ('pyi_rth_pyqt5',
    'D:\\PycharmProjects\\cinema\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyqt5.py',
    'PYSOURCE'),
@@ -40,7 +43,7 @@
  [],
  False,
  False,
- 1606583987,
+ 1606595508,
  [('runw.exe',
    'd:\\pycharmprojects\\cinema\\venv\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\runw.exe',
    'EXECUTABLE')])

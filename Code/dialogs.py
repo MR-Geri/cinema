@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPixmap, QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtCore import Qt
 
+from Code.crypro import cipher
 from settings import path_accounts, path_icon, path_image_start, path_password_font
 
 
@@ -32,8 +33,13 @@ class Login(QDialog):
         self.label_info.setText('Введите логин и пароль')
 
     def sign_in(self) -> None:
-        accounts = json.load(open(path_accounts))
-        if accounts.get(self.line_login.text(), None) == self.line_password.text():
+        accounts = {
+            cipher.decrypt(bytes(i[0], 'utf-8')): cipher.decrypt(bytes(i[1], 'utf-8'))
+            for i in json.load(open(path_accounts))
+        }
+        login = bytes(self.line_login.text(), 'utf-8')
+        password = bytes(self.line_password.text(), 'utf-8')
+        if accounts.get(login, None) == password:
             self.accept()
         else:
             self.label_info.setText('Неправильный логин или пароль')
