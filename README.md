@@ -13,6 +13,6 @@ ____
 Сгенерированные билеты хранятся temp/
 ____
 ## Вид связи в базе данных
-[Image alt](https://github.com/MR-Geri/cinema/raw/master/image/image.png)
+[](https://github.com/MR-Geri/cinema/raw/master/image/image.png)
 ____
 [По всем вопросам](https://vk.com/mr_geri)
