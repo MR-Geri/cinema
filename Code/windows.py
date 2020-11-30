@@ -19,7 +19,7 @@ from settings import path_icon, path_image_start, time_restart_session
 
 class WindowStart(QWidget):
     def __init__(self, window: MainWindow = None) -> None:
-        super(QWidget).__init__()
+        super().__init__()
         self.path_base_file = None
         self.cinemas = None
         self.window = window
@@ -244,7 +244,7 @@ class WindowCinemas(Window):
         self.cinema = None
         self.card = WidgetCinemasCard
         self.base = Base(start.path_base_file, """SELECT id, title FROM Cinemas""")
-        super(Window).__init__(start, user)
+        super().__init__(start, user)
         self.title_static = 'Доход по кинотеатрам'
         self.base_static = get_data_base(
             self.path_base_file,
@@ -391,7 +391,7 @@ class WindowCinema(Window):
                          """SELECT id, title FROM Halls WHERE  cinema_id = ?""",
                          (self.cinema_id,))
         self.card = WidgetCinemaCard
-        super(Window).__init__(self.cinemas.start, self.cinemas.user)
+        super().__init__(self.cinemas.start, self.cinemas.user)
         self.title_static = 'Доход по кинотеатру'
         self.base_static = get_data_base(
             self.path_base_file,
@@ -548,7 +548,7 @@ class WindowHall(Window):
                              *reversed(list(map(int, x[2].split('.')))), *list(map(int, x[3].split(':')))
                          ))
         self.card = WidgetHallCard
-        super(Window).__init__(self.cinema.start, self.cinema.user)
+        super().__init__(self.cinema.start, self.cinema.user)
         self.title_static = 'Доход по залу'
         self.base_static = get_data_base(
             self.path_base_file,
@@ -722,7 +722,7 @@ class WindowSession(Window):
         self.window = hall.session
         self.hall = hall
         self.session_id = session_id
-        super(Window).__init__(self.hall.start, self.hall.user)
+        super().__init__(self.hall.start, self.hall.user)
         #  Информация о сессии
         self.price = get_data_base(self.path_base_file,
                                    """SELECT price FROM Sessions WHERE id = ?""",
