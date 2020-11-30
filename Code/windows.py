@@ -14,6 +14,7 @@ from Code.dialogs import FormLogin, Login, FormCinema, FormHall, FormSession, Me
 from Code.data_base import get_data_base, get_base, Base
 from Code.image import ticket
 from Code.widgets import WidgetCinemasCard, WidgetCinemaCard, WidgetHallCard, WidgetPlacement
+from Code.createBase import db_create
 from settings import path_icon, path_image_start, time_restart_session
 
 
@@ -66,56 +67,6 @@ class WindowStart(QWidget):
         self.cinemas.show()
         self.window.hide()
 
-    @staticmethod
-    def db_create(base):
-        base.execute("""
-                                           create table Cinemas
-                                           (
-                                               id    INTEGER not null
-                                                   primary key autoincrement
-                                                   unique,
-                                               title STRING  not null
-                                           );
-                                           """)
-        base.execute("""
-                                           create table Halls
-                                           (
-                                               id         INTEGER not null
-                                                   constraint Halls_pk
-                                                       primary key autoincrement,
-                                               title      STRING  not null,
-                                               cinema_id  INTEGER not null
-                                                   references Cinemas,
-                                               rows       INTEGER not null,
-                                               places_row INTEGER not null
-                                           );
-                                           """)
-        base.execute("""create unique index Halls_id_uindex on Halls (id);""")
-        base.execute("""
-                                           create table Sessions
-                                           (
-                                               id       INTEGER not null
-                                                   primary key autoincrement
-                                                   unique,
-                                               title    STRING  not null,
-                                               hall_id  INTEGER not null
-                                                   references Halls,
-                                               date     TEXT    not null,
-                                               time     TEXT    not null,
-                                               duration TEXT    not null,
-                                               price    INTEGER default 0 not null
-                                           );
-                                           """)
-        base.execute("""
-                       create table Places
-                       (
-                           row        INTEGER not null,
-                           place      INTEGER not null,
-                           session_id INTEGER
-                               references Sessions
-                       );
-                                           """)
-
     def create_base(self) -> None:
         """
         Созадние базы данных и её использование
@@ -128,7 +79,7 @@ class WindowStart(QWidget):
             temp_base_path = os.path.abspath(f'../temp/temp_base_{date}.sqlite')
             with open(temp_base_path, mode='w') as _:
                 with get_base(temp_base_path, True) as base:
-                    self.db_create(base)
+                    db_create(base)
             self.path_base_file = os.path.abspath(QFileDialog.getSaveFileName(
                 self, caption='Сохранить базу', directory='../bases', filter='SQLite (*.sqlite);;Все файлы (*)')[0])
             if self.path_base_file:
